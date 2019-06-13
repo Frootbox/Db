@@ -1,0 +1,18 @@
+{
+    "name": "frootbox/db",
+    "description": "Frootbox Database Abstraction Layer",
+    "support": {
+        "docs": "",
+        "email": "jan.habbo.bruening@gmail.com"
+    },
+    "version":	"0.0.3", 
+    "authors": [
+        {
+            "name": "Jan Habbo Brüning",
+            "email": "jan.habbo.bruening@gmail.com"
+        }
+    ],
+    "autoload": {
+    	"psr-4": { "Frootbox\\Db\\": "src/" } 
+    }
+}
