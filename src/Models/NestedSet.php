@@ -51,4 +51,27 @@ abstract class NestedSet extends \Frootbox\Db\Model {
             'className' => $this->class
         ]);
     }
+    
+    
+    /**
+     * 
+     */
+    public function insertRoot ( \Frootbox\Db\Rows\NestedSet $rootNode ): \Frootbox\Db\Row {
+        
+        $rootNode->setData([
+            'lft' => 1,
+            'rgt' => 2,
+            'parentId' => 0
+        ]);
+        
+        $row = $this->insert($rootNode);
+        
+        $row->setData([
+            'rootId' => $row->getId()
+        ]);
+        
+        $row->save();
+        
+        return $row;
+    }
 }

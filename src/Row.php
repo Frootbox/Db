@@ -40,6 +40,8 @@ class Row {
             if (array_key_exists($attribute, $this->data)) {
                 return $this->data[$attribute];                
             }
+            
+            return null;
         }
 
 
@@ -176,6 +178,28 @@ class Row {
             $this->data[$key] = $value;
         }
 
+        return $this;
+    }
+    
+    
+    /**
+     * 
+     */
+    public function setDb ( \Frootbox\Db\Db $db ) {
+        
+        $this->db = $db;
+        
+        return $this;
+    }
+    
+    
+    /**
+     * 
+     */
+    public function setId ( $id ) {
+        
+        $this->data['id'] = $id;
+        
         return $this;
     }
 }

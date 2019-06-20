@@ -9,7 +9,7 @@ class NestedSet extends \Frootbox\Db\Row {
     /**
      * Insert new child
      */
-    public function appendChild ( \Frootbox\Db\Row $child ) {
+    public function appendChild ( \Frootbox\Db\Row $child ): \Frootbox\Db\Row {
 
         $this->db->transactionStart();
 
@@ -111,6 +111,28 @@ class NestedSet extends \Frootbox\Db\Row {
         return true;
     }
 
+    
+    /**
+     * 
+     */
+    public function getChildren ( ) {
+        
+            
+        $result = $this->db->fetch([
+            'table' => $this->getTable(),
+            'where' => [
+                'parentId' => $this->getId()
+            ],
+            'order' => [
+                'lft ASC'
+            ]
+        ]);
+        
+        $result->setClassName(get_class($this));
+        
+        return $result;
+    }
+    
 
     /**
      * Get trace to root node

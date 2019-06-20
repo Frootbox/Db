@@ -90,7 +90,7 @@ abstract class Model {
     /**
      *
      */
-    public function insert ( \Frootbox\Db\Row $row ) {
+    public function insert ( \Frootbox\Db\Row $row ): \Frootbox\Db\Row {
 
         $params = $row->getData();
 
@@ -125,6 +125,8 @@ abstract class Model {
         $row->setData([
             'id' => $rowId
         ]);
+        
+        $row->setDb($this->db);
 
         return $row;
     }
