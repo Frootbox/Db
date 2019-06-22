@@ -1,3 +1,3 @@
-# Filemanager
+# Frootbox Database
 
-General Purpose Database Library
+A general purpose database abstraction layer.
