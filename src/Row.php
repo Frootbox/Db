@@ -50,12 +50,9 @@ class Row {
 
             $attribute = lcfirst(substr($method, 3));
 
-            if (array_key_exists($attribute, $this->data)) {
-
-                $this->data[$attribute] = $params[0];
-
-                return $this;
-            }
+            $this->data[$attribute] = $params[0];
+            
+            return $this;
         }
 
 

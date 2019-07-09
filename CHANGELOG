@@ -7,4 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+- support for dynamic model classes per row
+
+## 0.0.2
+
+### Added
 - Changelog

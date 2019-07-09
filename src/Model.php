@@ -27,7 +27,10 @@ abstract class Model {
         $params['table'] = $this->getTable();
 
         $result = $this->db->fetch($params);
-        $result->setClassName($this->class);
+        
+        if (!empty($this->class)) {
+            $result->setClassName($this->class);
+        }
 
         return $result;
     }
@@ -49,8 +52,10 @@ abstract class Model {
         if ($record === false) {
             throw new \Frootbox\Exceptions\NotFound();
         }
+        
+        $className = $record['className'] ?? $this->class;
 
-        return new $this->class($record, $this->db);
+        return new $className($record, $this->db);
     }
 
 

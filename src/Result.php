@@ -18,7 +18,9 @@ class Result implements \Iterator {
      */
     protected function getRow ( array $record ) {
         
-        return new $this->className($record, $this->db);
+        $className = $record['className'] ?? $this->className;
+        
+        return new $className($record, $this->db);
     }
     
     /**
