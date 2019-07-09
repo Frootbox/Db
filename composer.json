@@ -11,6 +11,7 @@
             "email": "jan.habbo.bruening@gmail.com"
         }
     ],
+    "license": "GPL-3.0-or-later",
     "autoload": {
     	"psr-4": { "Frootbox\\Db\\": "src/" } 
     }
