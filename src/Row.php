@@ -170,6 +170,15 @@ class Row {
      */
     public function setData ( array $data ): \Frootbox\Db\Row {
 
+        if (!empty($data['config'])) {
+
+            $this->config = array_replace_recursive($this->config, $data['config']);
+
+            $this->data['config'] = json_encode($this->config);
+
+            unset($data['config']);
+        }
+
         foreach ($data as $key => $value) {
 
             $this->data[$key] = $value;
@@ -197,6 +206,24 @@ class Row {
         
         $this->data['id'] = $id;
         
+        return $this;
+    }
+
+
+    /**
+     *
+     */
+    public function unset ( $mixed ): Row {
+
+        if (!is_array($mixed)) {
+            $mixed = [ $mixed ];
+        }
+
+        foreach ($mixed as $attribute) {
+
+            unset($this->data[$attribute]);
+        }
+
         return $this;
     }
 }
