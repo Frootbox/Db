@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Method row->unset();
+- Method Rows\NestedSet->getParent();
+- Method Row->unset();
 - License information to composer file
 
 ## 0.0.4 
