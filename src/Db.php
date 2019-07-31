@@ -13,6 +13,7 @@ class Db {
     
     protected $dbms;
     protected $transactionLevel = 0;
+    protected $variables = [ ];
 
 
     /**
@@ -67,6 +68,15 @@ class Db {
     /**
      *
      */
+    public function getVariable ( $variable ) {
+
+        return $this->variables[$variable] ?? null;
+    }
+
+
+    /**
+     *
+     */
     public function prepare ( string $sql ) {
 
         return $this->dbms->prepare($sql);
@@ -79,6 +89,17 @@ class Db {
     public function query ( $sql ) {
         
         return $this->dbms->query($sql);
+    }
+
+
+    /**
+     *
+     */
+    public function setVar ( $variable, $value ) : Db {
+
+        $this->variables['{' . $variable . '}'] = $value;
+
+        return $this;
     }
 
 

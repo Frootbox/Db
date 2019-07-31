@@ -154,6 +154,13 @@ class Row {
 
         $data['updated'] = date('Y-m-d H:i:s');
 
+        foreach ($data as $key => $value) {
+
+            if (!empty($value) and $value{0} == '{' and $val = $this->getDb()->getVariable($value)) {
+                $data[$key] = $val;
+            }
+        }
+
         $this->getDb()->update([
             'data' => $data,
             'table' => $this->getTable(),

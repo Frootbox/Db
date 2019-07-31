@@ -119,6 +119,11 @@ abstract class Model {
 
 
         foreach ($params AS $column => $value) {
+
+            if (!empty($value) and $value{0} == '{' and $val = $this->db->getVariable($value)) {
+                $value = $val;
+            }
+
             $stmt->bindValue(':' . $column, $value);
         }
 
