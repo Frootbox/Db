@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Method Row->unset();
 - License information to composer file
 - Method Result->reverse()
+- Feature InsertDefaults
 
 ## 0.0.4 
 

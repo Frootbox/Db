@@ -11,8 +11,9 @@ class Row {
     protected $model;
     protected $data;
     protected $db = null;
-    
-    
+    protected $onInsertDefault = null;
+
+
     /**
      *
      */
@@ -82,6 +83,14 @@ class Row {
         return $this->db;
     }
 
+
+    /**
+     *
+     */
+    public function getOnInsertDefaults ( ) {
+
+        return $this->onInsertDefault;
+    }
 
 
     /**

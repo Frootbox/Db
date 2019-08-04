@@ -99,6 +99,17 @@ abstract class Model {
 
         $params = $row->getData();
 
+
+        if (!empty($defaults = $row->getOnInsertDefaults())) {
+
+            foreach ($defaults as $key => $value) {
+
+                if (!isset($params[$key])) {
+                    $params[$key] = $value;
+                }
+            }
+        }
+
         if (isset($params['config']) AND is_array($params['config'])) {
             $params['config'] = json_encode($params['config']);
         }
