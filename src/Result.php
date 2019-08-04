@@ -103,6 +103,15 @@ class Result implements \Iterator {
         
         return count($this->result);
     }
+
+
+    /**
+     *
+     */
+    public function reverse ( ) {
+
+        $this->result = array_reverse($this->result);
+    }
     
     
     /**
