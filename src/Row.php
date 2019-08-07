@@ -120,6 +120,15 @@ class Row {
     /**
      *
      */
+    public function getDataRaw ( $attribute ) {
+
+        return $this->data[$attribute] ?? null;
+    }
+
+
+    /**
+     *
+     */
     public function getModel ( ): Model {
 
         return new $this->model($this->db);
