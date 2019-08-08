@@ -18,7 +18,7 @@ class Mysql implements Interfaces\Dbms {
      */
     public function __construct ( \Frootbox\Config\Config $config ) {
                 
-        $dsn = 'mysql:dbname=' . $config->database->schema . ';host=' . $config->database->host;
+        $dsn = 'mysql:dbname=' . $config->database->schema . ';host=' . $config->database->host . ';charset=utf8';
         
         $this->pdo = new \PDO($dsn, $config->database->user, $config->database->password, [
             \PDO::MYSQL_ATTR_FOUND_ROWS => true,
