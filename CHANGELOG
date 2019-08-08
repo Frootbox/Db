@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Condition MatchColumn
 - Method Row->getDataRaw()
 - Support for {var} syntax
 - Method Rows\NestedSet->getParent();
