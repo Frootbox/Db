@@ -48,7 +48,7 @@ abstract class NestedSet extends \Frootbox\Db\Model {
         $list = $stmt->fetchAll();
 
         return new \Frootbox\Db\Result($list, $this->db, [
-            'className' => $this->class
+            'className' => $this->class ?? null
         ]);
     }
     
