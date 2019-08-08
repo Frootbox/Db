@@ -12,6 +12,11 @@ class Select extends AbstractQuery {
      */
     protected function getBaseQuery ( ): string {
 
-        return 'SELECT * FROM ' . $this->getTable();
+        // TODO Refactor whole code to *NOT* use SELECT * any longer
+        if (empty($this->params['select'])) {
+            $this->params['select'] = [ '*' ];
+        }
+
+        return 'SELECT ' . implode(',', $this->params['select']) . ' FROM ' . $this->getTable();
     }
 }
