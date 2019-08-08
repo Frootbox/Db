@@ -12,7 +12,7 @@ class Row {
     protected $data;
     protected $db = null;
     protected $onInsertDefault = null;
-
+    protected $changed = [ ];
 
     /**
      *
@@ -52,7 +52,8 @@ class Row {
             $attribute = lcfirst(substr($method, 3));
 
             $this->data[$attribute] = $params[0];
-            
+            $this->changed[$attribute] = true;
+
             return $this;
         }
 
@@ -170,21 +171,32 @@ class Row {
 
         unset($data['id'], $data['date']);
 
-        $data['updated'] = date('Y-m-d H:i:s');
+        $this->setUpdated(date('Y-m-d H:i:s'));
 
         foreach ($data as $key => $value) {
+
+
+            if (!array_key_exists($key, $this->changed)) {
+
+                unset($data[$key]);
+
+                continue;
+            }
 
             if (!empty($value) and $value{0} == '{' and $val = $this->getDb()->getVariable($value)) {
                 $data[$key] = $val;
             }
         }
 
-        $this->getDb()->update([
-            'data' => $data,
-            'table' => $this->getTable(),
-            'where' => [ 'id' => $this->getId() ],
-            'limit' => 1
-        ]);
+        if (!empty($data)) {
+
+            $this->getDb()->update([
+                'data' => $data,
+                'table' => $this->getTable(),
+                'where' => ['id' => $this->getId()],
+                'limit' => 1
+            ]);
+        }
 
         return $this;
     }
@@ -201,12 +213,19 @@ class Row {
 
             $this->data['config'] = json_encode($this->config);
 
+            $this->changed['config'] = true;
+
             unset($data['config']);
         }
 
         foreach ($data as $key => $value) {
 
+            if (array_key_exists($key, $this->data) and $this->data[$key] == $value) {
+                continue;
+            }
+
             $this->data[$key] = $value;
+            $this->changed[$key] = true;
         }
 
         return $this;
@@ -234,6 +253,27 @@ class Row {
         return $this;
     }
 
+
+    /**
+     *
+     */
+    public function setModel ( $model ): Row {
+
+        $this->model = $model;
+
+        return $this;
+    }
+
+
+    /**
+     *
+     */
+    public function setTable ( $table ): Row {
+
+        $this->table = $table;
+
+        return $this;
+    }
 
     /**
      *
