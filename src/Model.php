@@ -123,7 +123,14 @@ abstract class Model {
 
 
         foreach ($params AS $column => $value) {
-            $query .= "\n," . $column . ' = :' . $column;
+
+            if ($value !== null) {
+                $query .= "\n," . $column . ' = :' . $column;
+            }
+            else {
+                $query .= "\n," . $column . ' = NULL';
+                unset($params[$column]);
+            }
         }
 
         $stmt = $this->db->prepare($query);
