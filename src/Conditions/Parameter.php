@@ -10,6 +10,8 @@ class Parameter {
     protected $key;
     protected $value;
 
+    protected $skip = false;
+
 
     /**
      *
@@ -43,8 +45,28 @@ class Parameter {
     /**
      *
      */
-    public function getValue ( ): string {
+    public function getSkip ( ): bool
+    {
+        return $this->skip;
+    }
 
-        return (string) $this->value;
+
+    /**
+     *
+     */
+    public function getValue ( ) {
+
+        return $this->value;
+    }
+
+
+    /**
+     * Mark parameter to be skipped during query building
+     */
+    public function setSkip ( bool $shouldSkip ): Parameter {
+
+        $this->skip = $shouldSkip;
+
+        return $this;
     }
 }

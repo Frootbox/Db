@@ -8,17 +8,25 @@ namespace Frootbox\Db\Dbms\Mysql\Queries;
 
 abstract class AbstractQuery implements Interfaces\QueryInterface {
 
-    protected $params;
-    protected $extraParameters = [ ];
-    protected $parameterIndex = 1;
+    protected $data;
 
+    protected $parameterIndex = 1;
+    protected $parameters = [ ];
 
     /**
      *
      */
-    public function __construct ( array $params ) {
+    public function __construct ( array $data ) {
 
-        $this->params = $params;
+        $this->data = $data;
+
+        if (!empty($this->data['data'])) {
+
+            foreach ($this->data['data'] as $key => $value) {
+
+                $this->parameters[] = new \Frootbox\Db\Conditions\Parameter($key, ':' . $key, $value);
+            }
+        }
     }
 
 
@@ -31,26 +39,9 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
     /**
      *
      */
-    public function getParameters ( ): array {
-
-        $parameters = [ ];
-
-        if (!empty($this->params['data'])) {
-
-            foreach ($this->params['data'] as $key => $value) {
-
-                $parameters[] = new \Frootbox\Db\Conditions\Parameter($key, ':' . $key, $value);
-            }
-        }
-
-        if (!empty($this->extraParameters)) {
-
-            foreach ($this->extraParameters as $parameter) {
-                $parameters[] = $parameter;
-            }
-        }
-
-        return $parameters;
+    public function getParameters ( ): array
+    {
+        return $this->parameters;
     }
 
 
@@ -61,7 +52,7 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
 
         foreach ($parameters as $parameter) {
 
-            $this->extraParameters[] = $parameter;
+            $this->parameters[] = $parameter;
         }
 
         return $this;
@@ -95,7 +86,7 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
                     $paramKey = ':' . $key . '_' . $this->parameterIndex++;
                     $sql .= ' ' . strtoupper($type) . ' ' . $key . ' = ' . $paramKey;
 
-                    $this->extraParameters[] = new \Frootbox\Db\Conditions\Parameter($key, $paramKey, $value);
+                    $this->parameters[] = new \Frootbox\Db\Conditions\Parameter($key, $paramKey, $value);
                 }
             }
         }
@@ -112,11 +103,11 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
      */
     public function getTable ( ): string {
 
-        if (empty($this->params['table'])) {
+        if (empty($this->data['table'])) {
             throw new \Frootbox\Exceptions\ParameterMissing('Missing Parameter "table".');
         }
 
-        return $this->params['table'];
+        return $this->data['table'];
     }
 
 
@@ -128,27 +119,27 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
         $sql = $this->getBaseQuery();
 
 
-        if (!empty($this->params['where'])) {
+        if (!empty($this->data['where'])) {
 
             $sql .= ' WHERE ';
 
-            if (!isset($this->params['where']['and']) and !isset($this->params['where']['or'])) {
+            if (!isset($this->data['where']['and']) and !isset($this->data['where']['or'])) {
 
-                $where = $this->params['where'];
-                unset($this->params['where']);
-                $this->params['where']['and'] = $where;
+                $where = $this->data['where'];
+                unset($this->data['where']);
+                $this->data['where']['and'] = $where;
             }
 
-            $sql .= $this->injectQueryConstraint('and', $this->params['where']);
+            $sql .= $this->injectQueryConstraint('and', $this->data['where']);
         }
 
 
-        if (!empty($this->params['order'])) {
+        if (!empty($this->data['order'])) {
 
             $sql .= ' ORDER BY ';
             $comma = (string) null;
 
-            foreach ($this->params['order'] as $order) {
+            foreach ($this->data['order'] as $order) {
 
                 $sql .= $comma . $order;
                 $comma = ', ';
@@ -156,9 +147,9 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
         }
 
 
-        if (!empty($this->params['limit'])) {
+        if (!empty($this->data['limit'])) {
 
-            $sql .= ' LIMIT ' . $this->params['limit'];
+            $sql .= ' LIMIT ' . $this->data['limit'];
         }
 
 

@@ -63,6 +63,10 @@ class Mysql implements Interfaces\Dbms {
 
         foreach ($query->getParameters() as $parameter) {
 
+            if ($parameter->getSkip()) {
+                continue;
+            }
+
             $stmt->bindValue($parameter->getKey(), $parameter->getValue());
         }
 

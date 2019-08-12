@@ -16,9 +16,18 @@ class Update extends AbstractQuery {
         $loop = 0;
         $comma = '';
 
+
         foreach ($this->getParameters() as $parameter) {
 
-            $sql .= $comma . $parameter->getColumn() . ' = ' . $parameter->getKey() . ' ';
+            if (gettype($parameter->getValue()) != 'NULL') {
+                $sql .= $comma . $parameter->getColumn() . ' = ' . $parameter->getKey() . ' ';
+            }
+            else {
+                $sql .= $comma . $parameter->getColumn() . ' = NULL ';
+
+                $parameter->setSkip(true);
+            }
+
             $comma = ', ';
         }
 

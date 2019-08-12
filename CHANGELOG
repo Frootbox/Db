@@ -6,16 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Added
 
 - Condition MatchColumn
-- Method Row->getDataRaw()
+- Method Row::getDataRaw()
 - Support for {var} syntax
-- Method Rows\NestedSet->getParent();
-- Method Row->unset();
+- Method Rows\NestedSet::getParent()
+- Method Row::unset()
 - License information to composer file
-- Method Result->reverse()
+- Method Result::reverse()
 - Feature InsertDefaults
+
+### Fixed
+
+- An error where NULL values can't be updated
+- Model::insert() correctly sets columns to NULL if value is NULL
 
 ## 0.0.4 
 
