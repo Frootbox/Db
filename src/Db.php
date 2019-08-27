@@ -66,6 +66,15 @@ class Db {
 
 
     /**
+     * Get connection schema
+     */
+    public function getSchema ( ): string
+    {
+        return $this->dbms->getSchema();
+    }
+
+
+    /**
      *
      */
     public function getVariable ( $variable ) {
