@@ -151,6 +151,28 @@ class NestedSet extends \Frootbox\Db\Row {
 
         return $result->current();
     }
+
+
+    /**
+     *
+     */
+    public function getSiblings ( )
+    {
+        $result = $this->db->fetch([
+            'table' => $this->getTable(),
+            'where' => [
+                'rootId' => $this->getRootId(),
+                'parentId' => $this->getParentId()
+            ],
+            'order' => [
+                'lft ASC'
+            ]
+        ]);
+
+        $result->setClassName(get_class($this));
+
+        return $result;
+    }
     
 
     /**
@@ -173,5 +195,14 @@ class NestedSet extends \Frootbox\Db\Row {
         $result->setClassName(get_class($this));
 
         return $result;
+    }
+
+
+    /**
+     *
+     */
+    public function isChildOf ( NestedSet $row ): bool
+    {
+        return ($this->getLft() > $row->getLft() and $this->getRgt() < $row->getRgt());
     }
 }
