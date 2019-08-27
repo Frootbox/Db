@@ -9,7 +9,8 @@ class Result implements \Iterator {
     
     protected $db;
     protected $className;
-    protected $result;    
+    protected $result;
+    protected $total = null;
     protected $index = 0;
     
     
@@ -34,7 +35,16 @@ class Result implements \Iterator {
         if (!empty($options['className'])) {
             $this->className = $options['className'];
         }
-    }    
+    }
+
+
+    /**
+     *
+     */
+    public function __toString ( )
+    {
+        return get_class($this) . ' (' . $this->getCount() . ')';
+    }
     
     
     /**
@@ -102,6 +112,24 @@ class Result implements \Iterator {
     public function getCount ( ) {
         
         return count($this->result);
+    }
+
+
+    /**
+     *
+     */
+    public function getTotal ( ): int
+    {
+
+        if ($this->total !== null) {
+            return $this->total;
+        }
+
+        $stmt = $this->db->query('SELECT FOUND_ROWS();');
+
+        $this->total = current($stmt->fetch());
+
+        return $this->total;
     }
 
 
