@@ -38,7 +38,7 @@ class Row {
             
             $attribute = lcfirst(substr($method, 3));
                         
-            if (array_key_exists($attribute, $this->data)) {
+            if (is_array($this->data) and array_key_exists($attribute, $this->data)) {
                 return $this->data[$attribute];                
             }
             
@@ -47,7 +47,7 @@ class Row {
 
 
         // Generic setter
-        if (substr($method, 0, 3) == 'set') {
+        if (substr($method, 0, 3) == 'set' and isset($params[0])) {
 
             $attribute = lcfirst(substr($method, 3));
 

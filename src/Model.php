@@ -99,6 +99,7 @@ abstract class Model {
 
         $params = $row->getData();
 
+        unset($params['id'], $params['updated']);
 
         if (!empty($defaults = $row->getOnInsertDefaults())) {
 
@@ -118,7 +119,7 @@ abstract class Model {
             $params['date'] = date('Y-m-d H:i:s');
         }
 
-        $query	=	'INSERT INTO ' . $this->getTable() . ' SET
+        $query = 'INSERT INTO ' . $this->getTable() . ' SET
 			updated	=	"' . date('Y-m-d H:i:s') . '"';
 
 

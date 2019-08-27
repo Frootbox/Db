@@ -12,20 +12,36 @@ namespace Frootbox\Db\Dbms;
 class Mysql implements Interfaces\Dbms {
     
     protected $pdo;
+
+    protected $schema;
     
     /**
      *  
      */
-    public function __construct ( \Frootbox\Config\Config $config ) {
-                
-        $dsn = 'mysql:dbname=' . $config->database->schema . ';host=' . $config->database->host . ';charset=utf8';
-        
-        $this->pdo = new \PDO($dsn, $config->database->user, $config->database->password, [
+    public function __construct ( \Frootbox\Config\Config $config )
+    {
+        if ($config !== null) {
+            $this->connect($config->database->host, $config->database->schema, $config->database->user, $config->database->password);
+        }
+    }
+
+
+    /**
+     *
+     */
+    public function connect ( $host, $schema, $user, $password ) : Mysql
+    {
+        $this->schema = $schema;
+
+        $dsn = 'mysql:dbname=' . $schema . ';host=' . $host . ';charset=utf8';
+
+        $this->pdo = new \PDO($dsn, $user, $password, [
             \PDO::MYSQL_ATTR_FOUND_ROWS => true,
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
         ]);
+
+        return $this;
     }
 
 
@@ -95,6 +111,15 @@ class Mysql implements Interfaces\Dbms {
     public function getLastInsertId ( ) {
 
         return $this->pdo->lastInsertId();
+    }
+
+
+    /**
+     *
+     */
+    public function getSchema ( ): string
+    {
+        return $this->schema;
     }
 
 
