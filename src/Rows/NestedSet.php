@@ -137,6 +137,30 @@ class NestedSet extends \Frootbox\Db\Row {
     /**
      *
      */
+    public function getOffspring ( )
+    {
+
+        $result = $this->db->fetch([
+            'table' => $this->getTable(),
+            'where' => [
+                'rootId' => $this->getRootId(),
+                new \Frootbox\Db\Conditions\GreaterOrEqual('lft', $this->getLft()),
+                new \Frootbox\Db\Conditions\LessOrEqual('rgt', $this->getRgt()),
+            ],
+            'order' => [
+                'lft ASC'
+            ]
+        ]);
+
+        $result->setClassName(get_class($this));
+
+        return $result;
+    }
+
+
+    /**
+     *
+     */
     public function getParent ( ): NestedSet {
 
         $result = $this->db->fetch([
