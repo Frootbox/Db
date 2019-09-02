@@ -5,8 +5,8 @@
 
 namespace Frootbox\Db;
 
-class Row {
-
+class Row
+{
     protected $table;
     protected $model;
     protected $data;
@@ -17,8 +17,8 @@ class Row {
     /**
      *
      */
-    public function __construct ( array $record = null, Db $db = null ) {
-
+    public function __construct ( array $record = null, Db $db = null )
+    {
         $this->data = $record;
 
         if ($db !== null) {
@@ -47,7 +47,7 @@ class Row {
 
 
         // Generic setter
-        if (substr($method, 0, 3) == 'set' and isset($params[0])) {
+        if (substr($method, 0, 3) == 'set' and array_key_exists(0, $params)) {
 
             $attribute = lcfirst(substr($method, 3));
 
@@ -56,7 +56,6 @@ class Row {
 
             return $this;
         }
-
 
         
         throw new \Exception('Try to call undefined method "' . $method . '()" on class "' . get_called_class() . '"');
@@ -112,8 +111,8 @@ class Row {
     /**
      *
      */
-    public function getData ( ): array {
-
+    public function getData ( ): array
+    {
         return $this->data;
     }
 
@@ -121,8 +120,8 @@ class Row {
     /**
      *
      */
-    public function getDataRaw ( $attribute ) {
-
+    public function getDataRaw ( $attribute )
+    {
         return $this->data[$attribute] ?? null;
     }
 
@@ -130,8 +129,8 @@ class Row {
     /**
      *
      */
-    public function getModel ( ): Model {
-
+    public function getModel ( ): Model
+    {
         return new $this->model($this->db);
     }
 
@@ -139,8 +138,8 @@ class Row {
     /**
      *
      */
-    public function getModelClass ( ): string {
-
+    public function getModelClass ( ): string
+    {
         return $this->model;
     }
 
@@ -148,8 +147,8 @@ class Row {
     /**
      *
      */
-    public function getTable ( ) {
-
+    public function getTable ( )
+    {
         if (empty($this->table)) {
             throw new \Frootbox\Exceptions\RuntimeError('Missing attribute "table" in class ' . get_class($this));
         }
@@ -161,8 +160,9 @@ class Row {
     /**
      *
      */
-    public function save ( ): Row {
-
+    public function save ( ): Row
+    {
+        // Call pre-update function on database record
         if (method_exists($this, 'onBeforeSave')) {
             $this->onBeforeSave();
         }
@@ -235,8 +235,8 @@ class Row {
     /**
      * 
      */
-    public function setDb ( \Frootbox\Db\Db $db ) {
-        
+    public function setDb ( \Frootbox\Db\Db $db )
+    {
         $this->db = $db;
         
         return $this;
@@ -246,8 +246,8 @@ class Row {
     /**
      * 
      */
-    public function setId ( $id ) {
-        
+    public function setId ( $id )
+    {
         $this->data['id'] = $id;
         
         return $this;
@@ -257,8 +257,8 @@ class Row {
     /**
      *
      */
-    public function setModel ( $model ): Row {
-
+    public function setModel ( $model ): Row
+    {
         $this->model = $model;
 
         return $this;
@@ -268,8 +268,8 @@ class Row {
     /**
      *
      */
-    public function setTable ( $table ): Row {
-
+    public function setTable ( $table ): Row
+    {
         $this->table = $table;
 
         return $this;
@@ -278,8 +278,8 @@ class Row {
     /**
      *
      */
-    public function unset ( $mixed ): Row {
-
+    public function unset ( $mixed ): Row
+    {
         if (!is_array($mixed)) {
             $mixed = [ $mixed ];
         }

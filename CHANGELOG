@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.6
+
 ### Added
 
 - Method Db::getSchema()
@@ -14,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Method Rows\NestedSet::getSiblings()
 - Method Rows\NestedSet::isChildOf()
 - Method Rows\NestedSet::getOffspring()
+
+### Fixed
+
+- A bug when setting attributes to null
 
 ## 0.0.5
 
@@ -43,4 +49,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.0.3
 
 ### Added
+
 - Changelog
