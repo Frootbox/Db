@@ -59,9 +59,24 @@ class Db {
     /**
      *
      */
-    public function getModel ( $model ): Model {
-
+    public function getModel ( $model ): Model
+    {
         return new $model($this);
+    }
+
+
+    /**
+     *
+     */
+    public function getModelRaw( $table ): Model
+    {
+        $model = new Model($this);
+        $model->setTable($table);
+        $model->setClass(Row::class);
+
+        $model->setTable($table);
+
+        return $model;
     }
 
 

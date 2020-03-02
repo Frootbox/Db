@@ -5,25 +5,27 @@
 
 namespace Frootbox\Db;
 
-abstract class Model {
+use phpDocumentor\Reflection\Types\Void_;
 
+class Model
+{
     protected $table;
+    protected $class;
     protected $db;
 
     /**
      *
      */
-    public function __construct ( \Frootbox\Db\Db $db ) {
-
+    public function __construct(\Frootbox\Db\Db $db)
+    {
         $this->db = $db;
     }
-
 
     /**
      *
      */
-    public function fetch ( array $params = null ) {
-
+    public function fetch ( array $params = null ): Result
+    {
         $params['table'] = $this->getTable();
 
         $result = $this->db->fetch($params);
@@ -35,6 +37,25 @@ abstract class Model {
         return $result;
     }
 
+    /**
+     *
+     */
+    public function fetchOne(array $params = null, array $options = null): ?Row
+    {
+        $params['limit'] = 1;
+
+        $result = $this->fetch($params);
+
+        $row = $result->current();
+
+        if ($row === null and !empty($options['createOnMiss'])) {
+
+            $className = $this->class;
+            $row = $this->insert(new $className($params['where']));
+        }
+
+        return $row;
+    }
 
     /**
      *
@@ -58,26 +79,33 @@ abstract class Model {
         return new $className($record, $this->db);
     }
 
-
     /**
      *
      */
-    public function fetchByQuery ( $sql ) : \Frootbox\Db\Result {
+    public function fetchByQuery($sql, array $params = null): \Frootbox\Db\Result
+    {
+        // Prepare sql statement
+        $stmt = $this->db->prepare($sql);
 
-        // Generate sql statement
-        $stmt = $this->db->query($sql);
+        if (!empty($params)) {
 
+            foreach ($params as $tag => $value) {
+                $stmt->bindValue($tag, $value);
+            }
+        }
+
+        $stmt->execute();
 
         // Fetch all rows
         $rows = $stmt->fetchAll();
 
+        // Generate result
         $result = new \Frootbox\Db\Result($rows, $this->db, [
             'className' => $this->class
         ]);
 
         return $result;
     }
-
 
     /**
      *
@@ -91,12 +119,15 @@ abstract class Model {
         return $this->table;
     }
 
-
     /**
      *
      */
-    public function insert ( \Frootbox\Db\Row $row ): \Frootbox\Db\Row {
+    public function insert(\Frootbox\Db\Row $row): \Frootbox\Db\Row
+    {
+        // Perform onBeforeInsert method on row
+        $row->onBeforeInsert();
 
+        // Obtain row data
         $params = $row->getData();
 
         unset($params['id'], $params['updated']);
@@ -122,7 +153,6 @@ abstract class Model {
         $query = 'INSERT INTO ' . $this->getTable() . ' SET
 			updated	=	"' . date('Y-m-d H:i:s') . '"';
 
-
         foreach ($params AS $column => $value) {
 
             if ($value !== null) {
@@ -136,7 +166,6 @@ abstract class Model {
 
         $stmt = $this->db->prepare($query);
 
-
         foreach ($params AS $column => $value) {
 
             if (!empty($value) and $value{0} == '{' and $val = $this->db->getVariable($value)) {
@@ -148,15 +177,41 @@ abstract class Model {
 
         $stmt->execute();
 
-
         $rowId = $this->db->getLastInsertId();
 
         $row->setData([
-            'id' => $rowId
+            'id' => $rowId,
+            'date' => $params['date']
         ]);
         
         $row->setDb($this->db);
 
         return $row;
+    }
+
+    /**
+     *
+     */
+    public function setClass ( $class ): void
+    {
+        $this->class = $class;
+    }
+
+    /**
+     * Set models table
+     */
+    public function setTable(string $table): void
+    {
+        $this->table = $table;
+    }
+
+    /**
+     * Truncate table
+     */
+    public function truncate(): void
+    {
+        $sql = 'TRUNCATE `' . $this->getTable() . '`;';
+
+        $this->db->query($sql);
     }
 }

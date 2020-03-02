@@ -17,7 +17,7 @@ class Row
     /**
      *
      */
-    public function __construct ( array $record = null, Db $db = null )
+    public function __construct(array $record = null, Db $db = null)
     {
         $this->data = $record;
 
@@ -26,13 +26,11 @@ class Row
         }
     }
     
-    
     /**
      * 
      */
-    public function __call ( $method, array $params = null ) {
-        
-
+    public function __call($method, array $params = null)
+    {
         // Generic getter
         if (substr($method, 0, 3) == 'get') {
             
@@ -45,7 +43,6 @@ class Row
             return null;
         }
 
-
         // Generic setter
         if (substr($method, 0, 3) == 'set' and array_key_exists(0, $params)) {
 
@@ -56,26 +53,23 @@ class Row
 
             return $this;
         }
-
         
         throw new \Exception('Try to call undefined method "' . $method . '()" on class "' . get_called_class() . '"');
     }
 
-
     /**
      *
      */
-    public function __toString ( ) {
-
+    public function __toString()
+    {
         return 'Row ' . get_class($this) . ' #' . $this->getId();
     }
 
-
     /**
      *
      */
-    protected function getDb ( ): Db {
-
+    protected function getDb(): Db
+    {
         if ($this->db === null) {
             throw new \Frootbox\Exceptions\RuntimeError('Database-Connection object was not set.');
         }
@@ -83,21 +77,31 @@ class Row
         return $this->db;
     }
 
+    /**
+     *
+     */
+    public function duplicate(): Row
+    {
+        $row = clone $this;
+        $row = $this->getModel()->insert($row);
+
+        return $row;
+    }
 
     /**
      *
      */
-    public function getOnInsertDefaults ( ) {
-
+    public function getOnInsertDefaults()
+    {
         return $this->onInsertDefault;
     }
-
 
     /**
      * Delete active record
      */
-    public function delete ( ) {
-
+    public function delete()
+    {
+        // Obtain database wrapper
         $db = $this->getDb();
 
         $db->delete([
@@ -113,7 +117,7 @@ class Row
      */
     public function getData ( ): array
     {
-        return $this->data;
+        return $this->data ?? [];
     }
 
 
@@ -125,7 +129,6 @@ class Row
         return $this->data[$attribute] ?? null;
     }
 
-
     /**
      *
      */
@@ -134,7 +137,6 @@ class Row
         return new $this->model($this->db);
     }
 
-
     /**
      *
      */
@@ -142,7 +144,6 @@ class Row
     {
         return $this->model;
     }
-
 
     /**
      *
@@ -156,11 +157,29 @@ class Row
         return $this->table;
     }
 
+    /**
+     * Method can be overwritten to perform actions on the object before being inserted into the database
+     */
+    public function onBeforeInsert(): void
+    {
+
+    }
 
     /**
      *
      */
-    public function save ( ): Row
+    public function reload(): void
+    {
+        $model = $this->getModel();
+        $row = $model->fetchById($this->getId());
+
+        $this->data = $row->getData();
+    }
+
+    /**
+     *
+     */
+    public function save(): Row
     {
         // Call pre-update function on database record
         if (method_exists($this, 'onBeforeSave')) {
@@ -174,7 +193,6 @@ class Row
         $this->setUpdated(date('Y-m-d H:i:s'));
 
         foreach ($data as $key => $value) {
-
 
             if (!array_key_exists($key, $this->changed)) {
 
@@ -201,12 +219,11 @@ class Row
         return $this;
     }
 
-
     /**
      *
      */
-    public function setData ( array $data ): \Frootbox\Db\Row {
-
+    public function setData(array $data): \Frootbox\Db\Row
+    {
         if (!empty($data['config'])) {
 
             $this->config = array_replace_recursive($this->config, $data['config']);
@@ -231,44 +248,40 @@ class Row
         return $this;
     }
     
-    
     /**
      * 
      */
-    public function setDb ( \Frootbox\Db\Db $db )
+    public function setDb(\Frootbox\Db\Db $db)
     {
         $this->db = $db;
         
         return $this;
     }
     
-    
     /**
      * 
      */
-    public function setId ( $id )
+    public function setId($id)
     {
         $this->data['id'] = $id;
         
         return $this;
     }
 
-
     /**
      *
      */
-    public function setModel ( $model ): Row
+    public function setModel($model): Row
     {
         $this->model = $model;
 
         return $this;
     }
 
-
     /**
      *
      */
-    public function setTable ( $table ): Row
+    public function setTable($table): Row
     {
         $this->table = $table;
 
@@ -278,7 +291,7 @@ class Row
     /**
      *
      */
-    public function unset ( $mixed ): Row
+    public function unset($mixed): Row
     {
         if (!is_array($mixed)) {
             $mixed = [ $mixed ];

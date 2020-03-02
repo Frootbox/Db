@@ -5,16 +5,31 @@
 
 namespace Frootbox\Db\Models;
 
-abstract class NestedSet extends \Frootbox\Db\Model {
+abstract class NestedSet extends \Frootbox\Db\Model
+{
+    /**
+     * @param \Frootbox\Db\Rows\NestedSet $node
+     */
+    private function rewriteIdsRecursive(\Frootbox\Db\Rows\NestedSet $node, int $runningId = 0): int
+    {
+        $node->setLft(++$runningId);
 
+        foreach ($node->getChildren() as $child) {
+            $runningId = $this->rewriteIdsRecursive($child, $runningId);
+        }
+
+        $node->setRgt(++$runningId);
+        $node->save();
+
+        return $runningId;
+    }
 
     /**
      *
      */
-    public function getTree ( $rootId, array $params = null ) : \Frootbox\Db\Result {
-
+    public function getTree($rootId, array $params = null): \Frootbox\Db\Result
+    {
         $where = ' AND p.rootId = ' . $rootId . ' AND n.rootId = ' . $rootId;
-
 
         // Parse where
         if (!empty($params['where'])) {
@@ -73,5 +88,22 @@ abstract class NestedSet extends \Frootbox\Db\Model {
         $row->save();
         
         return $row;
+    }
+
+    /**
+     *
+     */
+    public function rewriteIds($rootId): void
+    {
+        // Fetch root node
+        $root = $this->fetchOne([
+            'where' => [
+                'rootId' => $rootId,
+                'parentId' => 0
+            ]
+        ]);
+
+
+        $this->rewriteIdsRecursive($root);
     }
 }

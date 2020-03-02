@@ -5,8 +5,8 @@
 
 namespace Frootbox\Db;
 
-class Result implements \Iterator {
-    
+class Result implements \Iterator
+{
     protected $db;
     protected $className;
     protected $result;
@@ -21,9 +21,14 @@ class Result implements \Iterator {
         
         $className = $record['className'] ?? $this->className;
         
+        if (!class_exists($className)) {
+            throw new \Exception("nöööö " . $className);
+        }
+
         return new $className($record, $this->db);
     }
     
+
     /**
      * 
      */
@@ -50,11 +55,34 @@ class Result implements \Iterator {
     /**
      * 
      */
-    public function current ( ) {
-     
-        return $this->getRow($this->result[$this->index]);
+    public function current(): ?Row
+    {
+        if (!isset($this->result[$this->index])) {
+            return null;
+        }
+
+        if (!is_object($this->result[$this->index])) {
+            $this->result[$this->index] = $this->getRow($this->result[$this->index]);
+        }
+
+        return $this->result[$this->index];
     }
-    
+
+    /**
+     *
+     */
+    public function implode(string $glue, string $attribute): string
+    {
+        $method = 'get' . ucfirst($attribute);
+
+        $list = [ ];
+
+        foreach ($this as $row) {
+            $list[] = $row->$method();
+        }
+
+        return implode($glue, $list);
+    }
     
     /**
      * 
@@ -100,9 +128,13 @@ class Result implements \Iterator {
     /**
      * 
      */
-    public function rewind ( ) {
-        
+    public function rewind()
+    {
+        // Reset index
         $this->index = 0;
+
+        // Reset keys
+        $this->result = array_values($this->result);
     }
     
     
@@ -130,6 +162,22 @@ class Result implements \Iterator {
         $this->total = current($stmt->fetch());
 
         return $this->total;
+    }
+
+    /**
+     *
+     */
+    public function push(Row $row)
+    {
+        $this->result[] = $row;
+    }
+
+    /**
+     *
+     */
+    public function removeByIndex(int $index): void
+    {
+        unset($this->result[$index]);
     }
 
 
@@ -161,5 +209,13 @@ class Result implements \Iterator {
         $shiftedRow = array_shift($this->result);
 
         return $this->getRow($shiftedRow, $this->db);
+    }
+
+    /**
+     *
+     */
+    public function unshift(Row $row)
+    {
+        array_unshift($this->result, $row);
     }
 }
