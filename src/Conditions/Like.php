@@ -13,7 +13,7 @@ class Like extends AbstractCondition
      */
     public function toString(): string
     {
-        return  $this->column . ' LIKE :paramCondLOE_1';
+        return  $this->column . ' LIKE :paramCondLike_1';
     }
 
     /**
@@ -22,7 +22,7 @@ class Like extends AbstractCondition
     public function getParameters(): array
     {
         return [
-            new Parameter($this->column, ':paramCondLOE_1', $this->input)
+            new Parameter($this->column, ':paramCondLike_1', $this->input)
         ];
     }
 }
