@@ -21,7 +21,7 @@ class Result implements \Iterator
         $className = $record['className'] ?? $this->className;
         
         if (!class_exists($className)) {
-            throw new \Exception("nöööö " . $className);
+            throw new \Exception("Row class missing: " . $className);
         }
 
         return new $className($record, $this->db);

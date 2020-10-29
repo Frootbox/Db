@@ -172,18 +172,5 @@ class Mysql implements Interfaces\Dbms {
         $query = new \Frootbox\Db\Dbms\Mysql\Queries\Update($params);
 
         $this->execute($query);
-
-
-        /*
-        // Get affected rows
-        $stmt = $this->pdo->query('SELECT ROW_COUNT() as affectedRows');
-        $stmt->execute();
-
-        $result = $stmt->fetch();
-
-        d($result);
-        */
-
-        return true;
     }
 }
