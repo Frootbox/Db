@@ -16,10 +16,10 @@ class Result implements \Iterator
     /**
      * 
      */
-    protected function getRow ( array $record ) {
-        
-        $className = $record['className'] ?? $this->className;
-        
+    protected function getRow(array $record)
+    {
+        $className = !empty($record['customClass']) ? $record['customClass'] : (!empty($record['className']) ? $record['className'] : $this->className);
+
         if (!class_exists($className)) {
             throw new \Exception("Row class missing: " . $className);
         }
@@ -30,8 +30,12 @@ class Result implements \Iterator
     /**
      * 
      */
-    public function __construct ( array $result, \Frootbox\Db\Db $db, array $options = null ) {
-        
+    public function __construct(
+        array $result,
+        \Frootbox\Db\Db $db,
+        array $options = null
+    )
+    {
         $this->db = $db;
         $this->result = $result;
 
@@ -62,6 +66,14 @@ class Result implements \Iterator
         }
 
         return $this->result[$this->index];
+    }
+
+    /**
+     *
+     */
+    public function getData(): array
+    {
+        return $this->result;
     }
 
     /**
@@ -128,6 +140,43 @@ class Result implements \Iterator
         $this->result = array_values($this->result);
     }
     
+    /**
+     *
+     */
+    public function getById(string $itemId): ?Row
+    {
+        foreach ($this as $item) {
+            if ($item->getId() == $itemId) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     */
+    public function getColumns($columnCount): array
+    {
+        $itemsPerColumn = ceil($this->getCount() / $columnCount);
+
+        $columns = [];
+        $loop = 0;
+        $index = 0;
+
+        foreach ($this as $item) {
+
+            $columns[$index][] = $item;
+
+            if (++$loop % $itemsPerColumn == 0) {
+                ++$index;
+            }
+        }
+
+        return $columns;
+    }
+
     /**
      * 
      */

@@ -22,7 +22,7 @@ class Model
     /**
      *
      */
-    public function fetch ( array $params = null ): Result
+    public function fetch(array $params = null): Result
     {
         $params['table'] = $this->getTable();
 
@@ -67,10 +67,10 @@ class Model
         $record = $stmt->fetch();
 
         if ($record === false) {
-            throw new \Frootbox\Exceptions\NotFound();
+            throw new \Frootbox\Exceptions\NotFound('Database record #' . $rowId . ' not found.');
         }
         
-        $className = $record['className'] ?? $this->class;
+        $className = $record['customClass'] ?? $record['className'] ?? $this->class;
 
         return new $className($record, $this->db);
     }
@@ -101,6 +101,14 @@ class Model
         ]);
 
         return $result;
+    }
+
+    /**
+     *
+     */
+    public function getClass(): string
+    {
+        return ($this->class);
     }
 
     /**

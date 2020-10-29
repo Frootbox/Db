@@ -5,7 +5,7 @@
 
 namespace Frootbox\Db;
 
-class Row
+class Row implements RowInterface
 {
     protected $table;
     protected $model;
@@ -147,6 +147,14 @@ class Row
     /**
      *
      */
+    public function getRepository(): Model
+    {
+        return new $this->model($this->db);
+    }
+
+    /**
+     *
+     */
     public function getTable ( )
     {
         if (empty($this->table)) {
@@ -154,6 +162,14 @@ class Row
         }
 
         return $this->table;
+    }
+
+    /**
+     *
+     */
+    public function hasColumn($column): bool
+    {
+        return array_key_exists($column, $this->data);
     }
 
     /**
@@ -187,7 +203,7 @@ class Row
 
         $data = $this->getData();
 
-        unset($data['id'], $data['date']);
+        unset($data['id']);
 
         $this->setUpdated(date('Y-m-d H:i:s'));
 
