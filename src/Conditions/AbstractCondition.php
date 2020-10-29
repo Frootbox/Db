@@ -6,8 +6,8 @@
 namespace Frootbox\Db\Conditions;
 
 
-abstract class AbstractCondition implements Interfaces\ConditionInterface {
-
+abstract class AbstractCondition implements Interfaces\ConditionInterface
+{
     protected $column;
     protected $input;
 
@@ -15,9 +15,8 @@ abstract class AbstractCondition implements Interfaces\ConditionInterface {
     /**
      *
      */
-    public function __construct ( string $column, $input = null ) {
-
+    public function __construct(string $column, $input = null)
+    {
         $this->column = $column;
         $this->input = $input;
     }
-}

@@ -4,18 +4,17 @@
 namespace Frootbox\Db\Dbms\Mysql\Queries;
 
 
-class Update extends AbstractQuery {
-
+class Update extends AbstractQuery
+{
     /**
      *
      */
-    protected function getBaseQuery ( ): string {
-
+    protected function getBaseQuery(): string
+    {
         $sql = 'UPDATE ' . $this->getTable() . ' SET ';
 
         $loop = 0;
         $comma = '';
-
 
         foreach ($this->getParameters() as $parameter) {
 

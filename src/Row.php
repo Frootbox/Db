@@ -111,11 +111,10 @@ class Row
         ]);
     }
 
-
     /**
      *
      */
-    public function getData ( ): array
+    public function getData(): array
     {
         return $this->data ?? [];
     }
@@ -132,7 +131,7 @@ class Row
     /**
      *
      */
-    public function getModel ( ): Model
+    public function getModel(): Model
     {
         return new $this->model($this->db);
     }
@@ -140,7 +139,7 @@ class Row
     /**
      *
      */
-    public function getModelClass ( ): string
+    public function getModelClass(): string
     {
         return $this->model;
     }
@@ -201,7 +200,7 @@ class Row
                 continue;
             }
 
-            if (!empty($value) and $value{0} == '{' and $val = $this->getDb()->getVariable($value)) {
+            if (!empty($value) and $value[0] == '{' and $val = $this->getDb()->getVariable($value)) {
                 $data[$key] = $val;
             }
         }

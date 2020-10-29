@@ -71,8 +71,8 @@ class Mysql implements Interfaces\Dbms {
     /**
      *
      */
-    public function execute ( Mysql\Queries\Interfaces\QueryInterface $query ) {
-
+    public function execute(Mysql\Queries\Interfaces\QueryInterface $query)
+    {
         $sql = $query->toString();
 
         $stmt = $this->pdo->prepare($sql);
@@ -91,11 +91,11 @@ class Mysql implements Interfaces\Dbms {
         return $stmt;
     }
 
-
     /**
      *
      */
-    public function fetch ( array $params ) {
+    public function fetch(array $params): array
+    {
 
         $query = new \Frootbox\Db\Dbms\Mysql\Queries\Select($params);
 
@@ -167,8 +167,8 @@ class Mysql implements Interfaces\Dbms {
     /**
      * Update record
      */
-    public function update ( array $params ) {
-
+    public function update(array $params): void
+    {
         $query = new \Frootbox\Db\Dbms\Mysql\Queries\Update($params);
 
         $this->execute($query);

@@ -5,8 +5,6 @@
 
 namespace Frootbox\Db;
 
-use phpDocumentor\Reflection\Types\Void_;
-
 class Model
 {
     protected $table;
@@ -60,15 +58,13 @@ class Model
     /**
      *
      */
-    public function fetchById ( $rowId ): Row {
-
+    public function fetchById($rowId): Row
+    {
         // Generate sql statement
         $stmt = $this->db->query('SELECT * FROM ' . $this->getTable() . ' WHERE id = ' . (int) $rowId . ' LIMIT 1');
 
-
         // Fetch all rows
         $record = $stmt->fetch();
-
 
         if ($record === false) {
             throw new \Frootbox\Exceptions\NotFound();
@@ -168,7 +164,7 @@ class Model
 
         foreach ($params AS $column => $value) {
 
-            if (!empty($value) and $value{0} == '{' and $val = $this->db->getVariable($value)) {
+            if (!empty($value) and $value[0] == '{' and $val = $this->db->getVariable($value)) {
                 $value = $val;
             }
 

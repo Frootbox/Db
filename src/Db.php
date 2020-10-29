@@ -9,21 +9,19 @@ namespace Frootbox\Db;
 /**
  * 
  */
-class Db {
-    
+class Db
+{
     protected $dbms;
     protected $transactionLevel = 0;
     protected $variables = [ ];
 
-
     /**
      * 
      */
-    public function __construct ( \Frootbox\Db\Dbms\Interfaces\Dbms $dbms ) {
-        
+    public function __construct(\Frootbox\Db\Dbms\Interfaces\Dbms $dbms)
+    {
         $this->dbms = $dbms;
     }
-
 
     /**
      *
@@ -57,9 +55,8 @@ class Db {
 
 
     /**
-     *
      */
-    public function getModel ( $model ): Model
+    public function getModel($model): Model
     {
         return new $model($this);
     }

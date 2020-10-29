@@ -13,7 +13,6 @@ class Result implements \Iterator
     protected $total = null;
     protected $index = 0;
     
-    
     /**
      * 
      */
@@ -27,7 +26,6 @@ class Result implements \Iterator
 
         return new $className($record, $this->db);
     }
-    
 
     /**
      * 
@@ -42,15 +40,13 @@ class Result implements \Iterator
         }
     }
 
-
     /**
      *
      */
-    public function __toString ( )
+    public function __toString(): string
     {
         return get_class($this) . ' (' . $this->getCount() . ')';
     }
-    
     
     /**
      * 
@@ -92,38 +88,33 @@ class Result implements \Iterator
         ++$this->index;
     }
     
-    
     /**
      * 
      */
-    public function key ( ) {
-        
+    public function key()
+    {
         return $this->index;
     }
-
 
     /**
      *
      */
-    public function map ( string $methodName ): Result {
-
+    public function map(string $methodName): Result
+    {
         foreach ($this as $item) {
-
             $item->$methodName();
         }
 
         return $this;
     }
     
-    
     /**
      * 
      */
-    public function valid ( ) {
-        
+    public function valid()
+    {
         return isset($this->result[$this->index]);
     }
-    
     
     /**
      * 
@@ -137,7 +128,6 @@ class Result implements \Iterator
         $this->result = array_values($this->result);
     }
     
-    
     /**
      * 
      */
@@ -145,7 +135,6 @@ class Result implements \Iterator
         
         return count($this->result);
     }
-
 
     /**
      *
@@ -180,7 +169,6 @@ class Result implements \Iterator
         unset($this->result[$index]);
     }
 
-
     /**
      *
      */
@@ -188,7 +176,6 @@ class Result implements \Iterator
 
         $this->result = array_reverse($this->result);
     }
-    
     
     /**
      * 
@@ -199,7 +186,6 @@ class Result implements \Iterator
         
         return $this;
     }
-
 
     /**
      *

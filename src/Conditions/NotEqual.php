@@ -6,9 +6,8 @@
 namespace Frootbox\Db\Conditions;
 
 
-class NotEqual extends AbstractCondition {
-
-
+class NotEqual extends AbstractCondition
+{
     /**
      *
      */
