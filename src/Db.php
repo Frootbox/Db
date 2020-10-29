@@ -55,6 +55,7 @@ class Db
 
 
     /**
+     * @deprecated
      */
     public function getModel($model): Model
     {
@@ -112,6 +113,13 @@ class Db
         return $this->dbms->query($sql);
     }
 
+    /**
+     *
+     */
+    public function getRepository($model): Model
+    {
+        return new $model($this);
+    }
 
     /**
      *
