@@ -124,6 +124,25 @@ class NestedSet extends \Frootbox\Db\Row
     /**
      *
      */
+    public function getFirstChild(): \Frootbox\Persistence\Page
+    {
+        $result = $this->db->fetch([
+            'table' => $this->getTable(),
+            'where' => [
+                'parentId' => $this->getId(),
+            ],
+            'order' => [ 'lft ASC' ],
+            'limit' => 1,
+        ]);
+
+        $result->setClassName(get_class($this));
+
+        return $result->current();
+    }
+
+    /**
+     *
+     */
     public function getOffspring(array $params = null)
     {
         if (empty($params['order'])) {
