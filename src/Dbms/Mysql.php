@@ -33,7 +33,7 @@ class Mysql implements Interfaces\Dbms {
     {
         $this->schema = $schema;
 
-        $dsn = 'mysql:dbname=' . $schema . ';host=' . $host . ';charset=utf8';
+        $dsn = 'mysql:dbname=' . $schema . ';host=' . $host . ';charset=utf8mb4';
 
         $this->pdo = new \PDO($dsn, $user, $password, [
             \PDO::MYSQL_ATTR_FOUND_ROWS => true,
