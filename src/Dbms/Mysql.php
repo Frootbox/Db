@@ -9,8 +9,8 @@ namespace Frootbox\Db\Dbms;
 /**
  * 
  */
-class Mysql implements Interfaces\Dbms {
-    
+class Mysql implements Interfaces\Dbms
+{
     protected $pdo;
 
     protected $schema;
@@ -18,7 +18,7 @@ class Mysql implements Interfaces\Dbms {
     /**
      *  
      */
-    public function __construct ( \Frootbox\Config\Config $config )
+    public function __construct(\Frootbox\Config\Config $config)
     {
         if ($config !== null) {
             $this->connect($config->database->host, $config->database->schema, $config->database->user, $config->database->password);
@@ -29,7 +29,7 @@ class Mysql implements Interfaces\Dbms {
     /**
      *
      */
-    public function connect ( $host, $schema, $user, $password ) : Mysql
+    public function connect($host, $schema, $user, $password): Mysql
     {
         $this->schema = $schema;
 
@@ -48,8 +48,8 @@ class Mysql implements Interfaces\Dbms {
     /**
      * Delete record
      */
-    public function delete ( array $params ) {
-
+    public function delete(array $params)
+    {
         $query = new \Frootbox\Db\Dbms\Mysql\Queries\Delete($params);
 
         $this->execute($query);
