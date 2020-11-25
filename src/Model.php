@@ -25,9 +25,25 @@ class Model
     public function fetch(array $params = null): Result
     {
         $params['table'] = $this->getTable();
+        $itemsPerPage = $params['limit'] ?? null;
+
+        if (!empty($params['page']) and $params['page'] > 1) {
+
+            $offset = $params['limit'] * $params['page'] - $params['limit'];
+
+            $params['limit'] = $offset . ',' . $params['limit'];
+        }
 
         $result = $this->db->fetch($params);
         
+        if (!empty($params['limit'])) {
+            $result->setItemsPerPage($itemsPerPage);
+        }
+
+        if (!empty($params['page'])) {
+            $result->setPage($params['page']);
+        }
+
         if (!empty($this->class)) {
             $result->setClassName($this->class);
         }

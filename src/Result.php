@@ -12,6 +12,8 @@ class Result implements \Iterator
     protected $result;
     protected $total = null;
     protected $index = 0;
+    protected $itemsPerPage = null;
+    protected $page = 1;
     
     /**
      * 
@@ -188,6 +190,26 @@ class Result implements \Iterator
     /**
      *
      */
+    public function getPage(): int
+    {
+        return $this->page;
+    }
+
+    /**
+     *
+     */
+    public function getPages()
+    {
+        if (empty($this->itemsPerPage)) {
+            return 1;
+        }
+
+        return ceil($this->getTotal() / $this->itemsPerPage);
+    }
+
+    /**
+     *
+     */
     public function getTotal ( ): int
     {
 
@@ -234,6 +256,22 @@ class Result implements \Iterator
         $this->className = $className;
         
         return $this;
+    }
+
+    /**
+     *
+     */
+    public function setItemsPerPage(int $itemsPerPage): void
+    {
+        $this->itemsPerPage = $itemsPerPage;
+    }
+
+    /**
+     *
+     */
+    public function setPage(int $page): void
+    {
+        $this->page = $page;
     }
 
     /**
