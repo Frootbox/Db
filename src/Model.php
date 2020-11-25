@@ -172,7 +172,7 @@ class Model
 
         foreach ($params AS $column => $value) {
 
-            if (!empty($value) and $value[0] == '{' and $val = $this->db->getVariable($value)) {
+            if (!empty($value) and is_string($value) and $value[0] == '{' and $val = $this->db->getVariable($value)) {
                 $value = $val;
             }
 
