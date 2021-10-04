@@ -5,7 +5,7 @@
 
 namespace Frootbox\Db;
 
-class Result implements \Iterator
+class Result implements \Iterator, \JsonSerializable
 {
     protected $db;
     protected $className;
@@ -227,7 +227,7 @@ class Result implements \Iterator
     /**
      *
      */
-    public function push(Row $row)
+    public function push(Row $row): void
     {
         $this->result[] = $row;
     }
@@ -277,7 +277,8 @@ class Result implements \Iterator
     /**
      *
      */
-    public function shift ( ) {
+    public function shift(): ?Row
+    {
 
         $shiftedRow = array_shift($this->result);
 

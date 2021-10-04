@@ -313,7 +313,6 @@ class Row implements RowInterface
         }
 
         foreach ($mixed as $attribute) {
-
             unset($this->data[$attribute]);
         }
 

@@ -5,12 +5,13 @@
 
 namespace Frootbox\Db\Dbms\Mysql\Queries;
 
-class Select extends AbstractQuery {
-
+class Select extends AbstractQuery
+{
     /**
      *
      */
-    protected function getBaseQuery ( ): string {
+    protected function getBaseQuery(): string
+    {
 
         // TODO Refactor whole code to *NOT* use SELECT * any longer
         if (empty($this->data['select'])) {

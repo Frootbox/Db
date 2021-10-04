@@ -135,8 +135,8 @@ class Db
     /**
      * Begin new transaction
      */
-    public function transactionStart ( ): \Frootbox\Db\Db {
-
+    public function transactionStart ( ): \Frootbox\Db\Db
+    {
         if ($this->transactionLevel == 0) {
             $this->dbms->transactionStart();
         }

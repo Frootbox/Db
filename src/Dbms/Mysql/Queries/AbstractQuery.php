@@ -114,10 +114,9 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
     /**
      *
      */
-    public function toString ( ) {
-
+    public function toString()
+    {
         $sql = $this->getBaseQuery();
-
 
         if (!empty($this->data['where'])) {
 
@@ -133,7 +132,6 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
             $sql .= $this->injectQueryConstraint('and', $this->data['where']);
         }
 
-
         if (!empty($this->data['order'])) {
 
             $sql .= ' ORDER BY ';
@@ -146,12 +144,9 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
             }
         }
 
-
         if (!empty($this->data['limit'])) {
-
             $sql .= ' LIMIT ' . $this->data['limit'];
         }
-
 
         return $sql;
     }

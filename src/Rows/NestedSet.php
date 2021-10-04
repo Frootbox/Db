@@ -239,11 +239,11 @@ class NestedSet extends \Frootbox\Db\Row
             'where' => [
                 new \Frootbox\Db\Conditions\LessOrEqual('lft', $this->getLft()),
                 new \Frootbox\Db\Conditions\GreaterOrEqual('rgt', $this->getRgt()),
-                'rootId' => $this->getRootId()
+                'rootId' => $this->getRootId(),
             ],
             'order' => [
-                'lft ASC'
-            ]
+                'lft ASC',
+            ],
         ]);
 
         $result->setClassName(get_class($this));
@@ -268,12 +268,12 @@ class NestedSet extends \Frootbox\Db\Row
             'table' => $this->getTable(),
             'where' => [
                 new \Frootbox\Db\Conditions\Greater('lft', $this->getLft()),
-                'parentId' => $this->getParentId()
+                'parentId' => $this->getParentId(),
             ],
             'order' => [
-                'lft ASC'
+                'lft ASC',
             ],
-            'limit' => 1
+            'limit' => 1,
         ]);
 
         $result->setClassName(get_class($this));

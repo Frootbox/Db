@@ -25,7 +25,6 @@ class Mysql implements Interfaces\Dbms
         }
     }
 
-
     /**
      *
      */
@@ -38,12 +37,11 @@ class Mysql implements Interfaces\Dbms
         $this->pdo = new \PDO($dsn, $user, $password, [
             \PDO::MYSQL_ATTR_FOUND_ROWS => true,
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
         ]);
 
         return $this;
     }
-
 
     /**
      * Delete record

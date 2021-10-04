@@ -6,15 +6,13 @@
 
 namespace Frootbox\Db\Dbms\Interfaces;
 
-
 /**
  * 
  */
-interface Dbms {
-
-
+interface Dbms
+{
     /**
      *
      */
-    public function transactionStart ( );
+    public function transactionStart(): void;
 }
