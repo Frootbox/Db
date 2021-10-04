@@ -48,8 +48,14 @@ class Row implements RowInterface
 
             $attribute = lcfirst(substr($method, 3));
 
-            $this->data[$attribute] = $params[0];
-            $this->changed[$attribute] = true;
+            if (!is_array($this->data)) {
+                $this->data = [];
+            }
+
+            if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0]) {
+                $this->data[$attribute] = $params[0];
+                $this->changed[$attribute] = true;
+            }
 
             return $this;
         }
@@ -201,11 +207,15 @@ class Row implements RowInterface
             $this->onBeforeSave();
         }
 
+        if (empty($this->changed)) {
+            return $this;
+        }
+
+        $this->setUpdated(date('Y-m-d H:i:s'));
+
         $data = $this->getData();
 
         unset($data['id']);
-
-        $this->setUpdated(date('Y-m-d H:i:s'));
 
         foreach ($data as $key => $value) {
 
@@ -216,7 +226,7 @@ class Row implements RowInterface
                 continue;
             }
 
-            if (!empty($value) and $value[0] == '{' and $val = $this->getDb()->getVariable($value)) {
+            if (!empty($value) and is_string($value) and $value[0] == '{' and $val = $this->getDb()->getVariable($value)) {
                 $data[$key] = $val;
             }
         }

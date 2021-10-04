@@ -53,6 +53,14 @@ class Result implements \Iterator, \JsonSerializable
     {
         return get_class($this) . ' (' . $this->getCount() . ')';
     }
+
+    /**
+     *
+     */
+    public function clear(): void
+    {
+        $this->result = [];
+    }
     
     /**
      * 
@@ -68,6 +76,40 @@ class Result implements \Iterator, \JsonSerializable
         }
 
         return $this->result[$this->index];
+    }
+
+    /**
+     *
+     */
+    public function extractByValue(array $values): \Frootbox\Db\Result
+    {
+        $newResult = clone $this;
+        $newResult->clear();
+
+        foreach ($this as $index => $row) {
+
+            foreach ($values as $attribute => $value) {
+
+                if (is_array($value)) {
+
+                    foreach ($value as $val) {
+
+                        $getter = 'get' . ucfirst($attribute);
+
+                        if ($row->$getter() == $val) {
+                            $newResult->push($row);
+                            $this->removeByIndex($index);
+                            continue 2;
+                        }
+                    }
+                }
+                else {
+
+                }
+            }
+        }
+
+        return $newResult;
     }
 
     /**
@@ -94,6 +136,29 @@ class Result implements \Iterator, \JsonSerializable
         return implode($glue, $list);
     }
     
+    /**
+     *
+     */
+    public function jsonSerialize()
+    {
+        $list = [];
+
+        foreach ($this as $row) {
+
+            if ($row instanceof \JsonSerializable) {
+                $list[] = $row->jsonSerialize();
+            }
+            else {
+                $list[] = [
+                    'id' => $row->getId(),
+                ];
+            }
+
+        }
+
+        return $list;
+    }
+
     /**
      * 
      */
@@ -231,12 +296,34 @@ class Result implements \Iterator, \JsonSerializable
     {
         $this->result[] = $row;
     }
+    
+    /**
+     *
+     */
+    public function pushRaw(array $record): void
+    {
+        $this->result[] = $record;
+    }
+
+    /**
+     *
+     */
+    public function pushResult(\Frootbox\Db\Result $result): void
+    {
+        foreach ($result as $row) {
+            $this->push($row);
+        }
+    }
 
     /**
      *
      */
     public function removeByIndex(int $index): void
     {
+        $total = $this->getTotal();
+
+        $this->total = $total - 1;
+
         unset($this->result[$index]);
     }
 
@@ -279,6 +366,9 @@ class Result implements \Iterator, \JsonSerializable
      */
     public function shift(): ?Row
     {
+        if (empty($this->result)) {
+            return null;
+        }
 
         $shiftedRow = array_shift($this->result);
 
