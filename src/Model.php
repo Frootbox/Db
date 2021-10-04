@@ -48,6 +48,10 @@ class Model
             $result->setClassName($this->class);
         }
 
+        if (!empty($params['calcFoundRows'])) {
+            $result->getTotal();
+        }
+
         return $result;
     }
 

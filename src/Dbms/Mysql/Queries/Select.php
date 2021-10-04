@@ -12,6 +12,9 @@ class Select extends AbstractQuery
      */
     protected function getBaseQuery(): string
     {
+        if (!empty($this->data['page'])) {
+            $this->data['calcFoundRows'] = true;
+        }
 
         // TODO Refactor whole code to *NOT* use SELECT * any longer
         if (empty($this->data['select'])) {
