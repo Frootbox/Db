@@ -147,9 +147,11 @@ class Mysql implements Interfaces\Dbms
     /**
      *
      */
-    public function transactionStart ( ) {
-
-        $this->pdo->beginTransaction();
+    public function transactionStart(): void
+    {
+        if (!$this->pdo->inTransaction()) {
+            $this->pdo->beginTransaction();
+        }
     }
 
 
