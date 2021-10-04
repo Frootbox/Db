@@ -139,7 +139,7 @@ class Result implements \Iterator, \JsonSerializable
     /**
      *
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $list = [];
 
@@ -162,15 +162,15 @@ class Result implements \Iterator, \JsonSerializable
     /**
      * 
      */
-    public function next ( ) {
-        
+    public function next(): void
+    {
         ++$this->index;
     }
     
     /**
      * 
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->index;
     }
@@ -190,7 +190,7 @@ class Result implements \Iterator, \JsonSerializable
     /**
      * 
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->result[$this->index]);
     }
@@ -198,7 +198,7 @@ class Result implements \Iterator, \JsonSerializable
     /**
      * 
      */
-    public function rewind()
+    public function rewind(): void
     {
         // Reset index
         $this->index = 0;
