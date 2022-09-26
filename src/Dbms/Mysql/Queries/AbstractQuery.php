@@ -83,10 +83,26 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
                 }
                 else {
 
-                    $paramKey = ':' . $key . '_' . $this->parameterIndex++;
-                    $sql .= ' ' . strtoupper($type) . ' ' . $key . ' = ' . $paramKey;
+                    if (strtolower($type) == 'or') {
 
-                    $this->parameters[] = new \Frootbox\Db\Conditions\Parameter($key, $paramKey, $value);
+                        foreach ($params as $column => $values) {
+
+                            foreach ($values as $value) {
+                                $paramKey = ':' . $column . '_' . $this->parameterIndex++;
+                                $sql .= ' ' . strtoupper($type) . ' ' . $key . ' = ' . $paramKey;
+
+                                $this->parameters[] = new \Frootbox\Db\Conditions\Parameter($key, $paramKey, $value);
+                            }
+
+                        }
+
+                    }
+                    else {
+                        $paramKey = ':' . $key . '_' . $this->parameterIndex++;
+                        $sql .= ' ' . strtoupper($type) . ' ' . $key . ' = ' . $paramKey;
+
+                        $this->parameters[] = new \Frootbox\Db\Conditions\Parameter($key, $paramKey, $value);
+                    }
                 }
             }
         }

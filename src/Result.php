@@ -5,7 +5,7 @@
 
 namespace Frootbox\Db;
 
-class Result implements \Iterator, \JsonSerializable
+class Result implements \Iterator, \JsonSerializable, \Countable
 {
     protected $db;
     protected $className;
@@ -21,6 +21,11 @@ class Result implements \Iterator, \JsonSerializable
     protected function getRow(array $record)
     {
         $className = !empty($record['customClass']) ? $record['customClass'] : (!empty($record['className']) ? $record['className'] : $this->className);
+
+        if (empty($className)) {
+            $model = $this->db->getRepository($record['model']);
+            $className = $model->getClass();
+        }
 
         if (!class_exists($className)) {
             throw new \Exception("Row class missing: " . $className);
@@ -110,6 +115,23 @@ class Result implements \Iterator, \JsonSerializable
         }
 
         return $newResult;
+    }
+
+    /**
+     *
+     */
+    public function extractValues(string $attribute): array
+    {
+
+        $method = 'get' . ucfirst($attribute);
+
+        $list = [];
+
+        foreach ($this as $index => $row) {
+            $list[] = $row->$method();
+        }
+
+        return $list;
     }
 
     /**
@@ -205,6 +227,14 @@ class Result implements \Iterator, \JsonSerializable
 
         // Reset keys
         $this->result = array_values($this->result);
+    }
+
+    /**
+     *
+     */
+    public function count(): int
+    {
+        return count($this->result);
     }
     
     /**

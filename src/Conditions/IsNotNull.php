@@ -5,14 +5,14 @@
 
 namespace Frootbox\Db\Conditions;
 
-class Greater extends AbstractCondition
+class IsNotNull extends AbstractCondition
 {
     /**
      *
      */
     public function toString(): string
     {
-        return  $this->column . ' > :paramCondGOE_' . $this->getUid();
+        return  $this->column . ' IS NOT NULL';
     }
 
     /**
@@ -21,7 +21,7 @@ class Greater extends AbstractCondition
     public function getParameters(): array
     {
         return [
-            new Parameter($this->column, ':paramCondGOE_' . $this->getUid(), $this->input)
+     
         ];
     }
 }

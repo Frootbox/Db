@@ -35,8 +35,8 @@ class Db
     /**
      *
      */
-    public function fetch ( array $params ) {
-
+    public function fetch(array $params)
+    {
         $rows = $this->dbms->fetch($params);
 
         $result = new \Frootbox\Db\Result($rows, $this);

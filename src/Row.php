@@ -52,7 +52,9 @@ class Row implements RowInterface
                 $this->data = [];
             }
 
-            if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0]) {
+            
+            
+            if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0] or (is_string($params[0]) and strlen($params[0]) != strlen($this->data[$attribute]))) {
                 $this->data[$attribute] = $params[0];
                 $this->changed[$attribute] = true;
             }
