@@ -145,6 +145,20 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     /**
      *
      */
+    public function hasId(int $id): bool
+    {
+        foreach ($this->result as $row) {
+            if ($row->getId() == $id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     */
     public function implode(string $glue, string $attribute): string
     {
         $method = 'get' . ucfirst($attribute);
