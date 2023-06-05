@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Renamed CHANGELOG to CHANGELOG.md
+- Added PHPDoc annotations
 
 ## [0.2.0] - 2023-01-28
 

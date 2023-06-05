@@ -1,6 +1,6 @@
 <?php 
 /**
- * 
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
 namespace Frootbox\Db;
@@ -15,7 +15,8 @@ class Row implements RowInterface
     protected $changed = [ ];
 
     /**
-     *
+     * @param array|null $record
+     * @param Db|null $db
      */
     public function __construct(array $record = null, Db $db = null)
     {
@@ -27,7 +28,10 @@ class Row implements RowInterface
     }
     
     /**
-     * 
+     * @param $method
+     * @param array|null $params
+     * @return $this|bool|mixed|null
+     * @throws \Exception
      */
     public function __call($method, array $params = null)
     {
@@ -51,8 +55,6 @@ class Row implements RowInterface
             if (!is_array($this->data)) {
                 $this->data = [];
             }
-
-            
             
             if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0] or (is_string($params[0]) and strlen($params[0]) != strlen($this->data[$attribute]))) {
                 $this->data[$attribute] = $params[0];
@@ -71,7 +73,7 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return string
      */
     public function __toString()
     {
@@ -79,7 +81,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return Db
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     protected function getDb(): Db
     {
@@ -91,7 +94,7 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return Row
      */
     public function duplicate(): Row
     {
@@ -102,7 +105,7 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return mixed|null
      */
     public function getOnInsertDefaults()
     {
@@ -125,16 +128,16 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return array
      */
     public function getData(): array
     {
         return $this->data ?? [];
     }
 
-
     /**
-     *
+     * @param $attribute
+     * @return mixed|null
      */
     public function getDataRaw ( $attribute )
     {
@@ -142,7 +145,7 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return Model
      */
     public function getModel(): Model
     {
@@ -150,7 +153,7 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return string
      */
     public function getModelClass(): string
     {
@@ -158,7 +161,7 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return Model
      */
     public function getRepository(): Model
     {
@@ -166,7 +169,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return mixed
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function getTable ( )
     {
@@ -178,7 +182,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @param $column
+     * @return bool
      */
     public function hasColumn($column): bool
     {
@@ -194,7 +199,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return void
+     * @throws \Frootbox\Exceptions\NotFound
      */
     public function reload(): void
     {
@@ -205,7 +211,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @return $this
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function save(): Row
     {
@@ -252,7 +259,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @param array $data
+     * @return $this
      */
     public function setData(array $data): \Frootbox\Db\Row
     {
@@ -279,9 +287,10 @@ class Row implements RowInterface
 
         return $this;
     }
-    
+
     /**
-     * 
+     * @param Db $db
+     * @return $this
      */
     public function setDb(\Frootbox\Db\Db $db)
     {
@@ -289,9 +298,10 @@ class Row implements RowInterface
         
         return $this;
     }
-    
+
     /**
-     * 
+     * @param $id
+     * @return $this
      */
     public function setId($id)
     {
@@ -301,7 +311,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @param $model
+     * @return $this
      */
     public function setModel($model): Row
     {
@@ -311,7 +322,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @param $table
+     * @return $this
      */
     public function setTable($table): Row
     {
@@ -321,7 +333,8 @@ class Row implements RowInterface
     }
 
     /**
-     *
+     * @param $mixed
+     * @return $this
      */
     public function unset($mixed): Row
     {
