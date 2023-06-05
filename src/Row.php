@@ -61,6 +61,11 @@ class Row implements RowInterface
 
             return $this;
         }
+
+        // Generic bool getter
+        if (str_starts_with($method, 'is') and array_key_exists($method, $this->data)) {
+            return !empty($this->data[$method]);
+        }
         
         throw new \Exception('Try to call undefined method "' . $method . '()" on class "' . get_called_class() . '"');
     }

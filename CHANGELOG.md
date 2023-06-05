@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Generic bool getter Row::isXXX()
+
 ### Changed
 
 - Renamed CHANGELOG to CHANGELOG.md
