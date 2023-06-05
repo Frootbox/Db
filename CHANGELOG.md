@@ -8,12 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Generic bool getter Row::isXXX()
+- Added generic bool getter Row::isXXX()
+- Added PHPDoc annotations
 
 ### Changed
 
 - Renamed CHANGELOG to CHANGELOG.md
-- Added PHPDoc annotations
+- Changed php minimum version to 8.0
 
 ## [0.2.0] - 2023-01-28
 

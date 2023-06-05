@@ -36,7 +36,7 @@ class Row implements RowInterface
     public function __call($method, array $params = null)
     {
         // Generic getter
-        if (substr($method, 0, 3) == 'get') {
+        if (str_starts_with($method, 'get')) {
             
             $attribute = lcfirst(substr($method, 3));
                         
@@ -48,7 +48,7 @@ class Row implements RowInterface
         }
 
         // Generic setter
-        if (substr($method, 0, 3) == 'set' and array_key_exists(0, $params)) {
+        if (str_starts_with($method, 'set') and array_key_exists(0, $params)) {
 
             $attribute = lcfirst(substr($method, 3));
 
