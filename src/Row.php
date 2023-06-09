@@ -57,6 +57,13 @@ class Row implements RowInterface
             }
             
             if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0] or (is_string($params[0]) and strlen($params[0]) != strlen($this->data[$attribute]))) {
+
+                // Convert value for boolean setter
+                if (str_starts_with($attribute, 'is')) {
+                    $params[0] = !empty($params[0]) ? 1 : 0;
+                }
+
+                // Set value
                 $this->data[$attribute] = $params[0];
                 $this->changed[$attribute] = true;
             }
@@ -64,7 +71,7 @@ class Row implements RowInterface
             return $this;
         }
 
-        // Generic bool getter
+        // Generic boolean getter
         if (str_starts_with($method, 'is') and array_key_exists($method, $this->data)) {
             return !empty($this->data[$method]);
         }
