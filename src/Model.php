@@ -144,9 +144,20 @@ class Model
     }
 
     /**
-     *
+     * @deprecated
      */
     public function insert(\Frootbox\Db\Row $row): \Frootbox\Db\Row
+    {
+        return $this->persist($row);
+    }
+
+    /**
+     * Persist active record
+     *
+     * @param Row $row
+     * @return Row
+     */
+    public function persist(\Frootbox\Db\Row $row): \Frootbox\Db\Row
     {
         // Perform onBeforeInsert method on row
         $row->onBeforeInsert();

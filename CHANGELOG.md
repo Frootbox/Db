@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed CHANGELOG to CHANGELOG.md
 - Changed php minimum version to 8.0
+- Change model::insert() to model::persist()
 
 ## [0.2.0] - 2023-01-28
 
