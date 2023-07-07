@@ -1,13 +1,12 @@
 <?php 
 /**
- * 
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
 namespace Frootbox\Db;
 
-
 /**
- * 
+ *
  */
 class Db
 {
@@ -16,7 +15,7 @@ class Db
     protected $variables = [ ];
 
     /**
-     * 
+     * @param Dbms\Interfaces\Dbms $dbms
      */
     public function __construct(\Frootbox\Db\Dbms\Interfaces\Dbms $dbms)
     {

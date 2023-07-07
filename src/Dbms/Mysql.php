@@ -18,11 +18,9 @@ class Mysql implements Interfaces\Dbms
     /**
      *  
      */
-    public function __construct(\Frootbox\Config\Config $config)
+    public function __construct(string $host, string $schema, string $user, string $password)
     {
-        if ($config !== null) {
-            $this->connect($config->database->host, $config->database->schema, $config->database->user, $config->database->password);
-        }
+        $this->connect($host, $schema, $user, $password);
     }
 
     /**

@@ -14,5 +14,10 @@ interface Dbms
     /**
      *
      */
+    public function __construct(string $host, string $schema, string $user, string $password);
+
+    /**
+     *
+     */
     public function transactionStart(): void;
 }
