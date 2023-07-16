@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2023-07-16
+
+### Fixed
+
+- Improved PHP 8.2 compatibility.
+
 ## [1.0] - 2023-07-07
 
 ### Changed
@@ -16,14 +22,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added generic bool getter Row::isXXX()
-- Added PHPDoc annotations
+- Added generic bool getter Row::isXXX().
+- Added PHPDoc annotations.
 
 ### Changed
 
-- Renamed CHANGELOG to CHANGELOG.md
-- Changed php minimum version to 8.0
-- Change model::insert() to model::persist()
+- Renamed CHANGELOG to CHANGELOG.md.
+- Changed php minimum version to PHP 8.0.
+- Change model::insert() to model::persist().
 
 ## [0.2.0] - 2023-01-28
 

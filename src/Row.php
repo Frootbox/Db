@@ -56,7 +56,7 @@ class Row implements RowInterface
                 $this->data = [];
             }
             
-            if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0] or (is_string($params[0]) and strlen($params[0]) != strlen($this->data[$attribute]))) {
+            if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0] or (is_string($params[0]) and strlen($params[0]) != !empty($this->data[$attribute]) ? strlen($this->data[$attribute]) : 0)) {
 
                 // Convert value for boolean setter
                 if (str_starts_with($attribute, 'is')) {
