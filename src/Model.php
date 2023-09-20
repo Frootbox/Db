@@ -7,12 +7,12 @@ namespace Frootbox\Db;
 
 class Model
 {
-    protected $table;
-    protected $class;
-    protected $db;
+    protected string $table;
+    protected string $class;
+    protected \Frootbox\Db\Db $db;
 
     /**
-     *
+     * @param \Frootbox\Db\Db $db
      */
     public function __construct(\Frootbox\Db\Db $db)
     {
@@ -20,7 +20,9 @@ class Model
     }
 
     /**
-     *
+     * @param array|null $params
+     * @return \Frootbox\Db\Result
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function fetch(array $params = null): Result
     {
@@ -56,7 +58,9 @@ class Model
     }
 
     /**
-     *
+     * @param array|null $params
+     * @param array|null $options
+     * @return \Frootbox\Db\Row|null
      */
     public function fetchOne(array $params = null, array $options = null): ?Row
     {
@@ -76,7 +80,10 @@ class Model
     }
 
     /**
-     *
+     * @param $rowId
+     * @return \Frootbox\Db\Row
+     * @throws \Frootbox\Exceptions\NotFound
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function fetchById($rowId): Row
     {
@@ -89,14 +96,16 @@ class Model
         if ($record === false) {
             throw new \Frootbox\Exceptions\NotFound('Database record #' . $rowId . ' not found.');
         }
-        
-        $className = $record['customClass'] ?? $record['className'] ?? $this->class;
+
+        $className = $record['customClass'] ?? $record['className'] ?? $this->getClass();
 
         return new $className($record, $this->db);
     }
 
     /**
-     *
+     * @param $sql
+     * @param array|null $params
+     * @return \Frootbox\Db\Result
      */
     public function fetchByQuery($sql, array $params = null): \Frootbox\Db\Result
     {
@@ -117,25 +126,26 @@ class Model
 
         // Generate result
         $result = new \Frootbox\Db\Result($rows, $this->db, [
-            'className' => $this->class
+            'className' => $this->getClass(),
         ]);
 
         return $result;
     }
 
     /**
-     *
+     * @return string
      */
     public function getClass(): string
     {
-        return ($this->class);
+        return $this->class;
     }
 
     /**
-     *
+     * @return string
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
-    public function getTable ( ) {
-
+    public function getTable(): string
+    {
         if (empty($this->table)) {
             throw new \Frootbox\Exceptions\RuntimeError('Missing mandatory Attribute "' . get_class($this) . '::table".');
 
@@ -225,7 +235,8 @@ class Model
     }
 
     /**
-     *
+     * @param $class
+     * @return void
      */
     public function setClass ( $class ): void
     {
