@@ -63,6 +63,11 @@ class Row implements RowInterface
                     $params[0] = !empty($params[0]) ? 1 : 0;
                 }
 
+                // Convert value for boolean setter
+                if (str_starts_with($attribute, 'has')) {
+                    $params[0] = !empty($params[0]) ? 1 : 0;
+                }
+
                 // Set value
                 $this->data[$attribute] = $params[0];
                 $this->changed[$attribute] = true;
@@ -73,6 +78,11 @@ class Row implements RowInterface
 
         // Generic boolean getter
         if (str_starts_with($method, 'is') and array_key_exists($method, $this->data)) {
+            return !empty($this->data[$method]);
+        }
+
+        // Generic boolean getter
+        if (str_starts_with($method, 'has') and array_key_exists($method, $this->data)) {
             return !empty($this->data[$method]);
         }
         
