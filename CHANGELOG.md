@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1] - 2023-10-02
+
+### Added
+
+- Added new method ```Result::removeByValue()```.
+
 ## [1.0.3] - 2023-09-23
 
 ### Added

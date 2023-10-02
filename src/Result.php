@@ -1,10 +1,13 @@
-<?php 
+<?php
 /**
- * 
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
 namespace Frootbox\Db;
 
+/**
+ *
+ */
 class Result implements \Iterator, \JsonSerializable, \Countable
 {
     protected $db;
@@ -14,9 +17,11 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     protected $index = 0;
     protected $itemsPerPage = null;
     protected $page = 1;
-    
+
     /**
-     * 
+     * @param array $record
+     * @return mixed
+     * @throws \Exception
      */
     protected function getRow(array $record)
     {
@@ -35,7 +40,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * 
+     * @param array $result
+     * @param \Frootbox\Db\Db $db
+     * @param array|null $options
      */
     public function __construct(
         array $result,
@@ -52,7 +59,7 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @return string
      */
     public function __toString(): string
     {
@@ -60,15 +67,16 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @return void
      */
     public function clear(): void
     {
         $this->result = [];
     }
-    
+
     /**
-     * 
+     * @return \Frootbox\Db\Row|null
+     * @throws \Exception
      */
     public function current(): ?Row
     {
@@ -84,7 +92,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param array $values
+     * @return $this
      */
     public function extractByValue(array $values): \Frootbox\Db\Result
     {
@@ -118,7 +127,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param string $attribute
+     * @return array
      */
     public function extractValues(string $attribute): array
     {
@@ -135,7 +145,7 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @return array
      */
     public function getData(): array
     {
@@ -143,7 +153,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param int $id
+     * @return bool
      */
     public function hasId(int $id): bool
     {
@@ -157,7 +168,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param string $glue
+     * @param string $attribute
+     * @return string
      */
     public function implode(string $glue, string $attribute): string
     {
@@ -171,9 +184,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
 
         return implode($glue, $list);
     }
-    
+
     /**
-     *
+     * @return mixed
      */
     public function jsonSerialize(): mixed
     {
@@ -196,15 +209,15 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * 
+     * @return void
      */
     public function next(): void
     {
         ++$this->index;
     }
-    
+
     /**
-     * 
+     * @return mixed
      */
     public function key(): mixed
     {
@@ -212,7 +225,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param string $methodName
+     * @return $this
      */
     public function map(string $methodName): Result
     {
@@ -222,17 +236,17 @@ class Result implements \Iterator, \JsonSerializable, \Countable
 
         return $this;
     }
-    
+
     /**
-     * 
+     * @return bool
      */
     public function valid(): bool
     {
         return isset($this->result[$this->index]);
     }
-    
+
     /**
-     * 
+     * @return void
      */
     public function rewind(): void
     {
@@ -244,15 +258,16 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @return int
      */
     public function count(): int
     {
         return count($this->result);
     }
-    
+
     /**
-     *
+     * @param string $itemId
+     * @return \Frootbox\Db\Row|null
      */
     public function getById(string $itemId): ?Row
     {
@@ -266,7 +281,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param $columnCount
+     * @return array
      */
     public function getColumns($columnCount): array
     {
@@ -289,15 +305,15 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * 
+     * @return int
      */
-    public function getCount ( ) {
-        
+    public function getCount(): int
+    {
         return count($this->result);
     }
 
     /**
-     *
+     * @return int
      */
     public function getPage(): int
     {
@@ -305,7 +321,7 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @return float|int
      */
     public function getPages()
     {
@@ -317,11 +333,10 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @return int
      */
     public function getTotal ( ): int
     {
-
         if ($this->total !== null) {
             return $this->total;
         }
@@ -334,15 +349,17 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param \Frootbox\Db\Row $row
+     * @return void
      */
     public function push(Row $row): void
     {
         $this->result[] = $row;
     }
-    
+
     /**
-     *
+     * @param array $record
+     * @return void
      */
     public function pushRaw(array $record): void
     {
@@ -350,7 +367,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param \Frootbox\Db\Result $result
+     * @return void
      */
     public function pushResult(\Frootbox\Db\Result $result): void
     {
@@ -360,7 +378,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param int $index
+     * @return void
      */
     public function removeByIndex(int $index): void
     {
@@ -372,25 +391,52 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param string $attribute
+     * @param mixed $value
+     * @return void
      */
-    public function reverse ( ) {
+    public function removeByValue(string $attribute, mixed $value): void
+    {
+        if (!is_array($value)) {
+            $value = [ $value ];
+        }
 
+        foreach ($this as $index => $row) {
+            $getter = 'get' . ucfirst($attribute);
+            $rowValue = $row->$getter();
+
+            foreach ($value as $checkValue) {
+                if ($checkValue == $rowValue) {
+                    $this->removeByIndex($index);
+                }
+            }
+        }
+
+        $this->rewind();
+    }
+
+    /**
+     * @return void
+     */
+    public function reverse(): void
+    {
         $this->result = array_reverse($this->result);
     }
-    
+
     /**
-     * 
+     * @param $className
+     * @return $this
      */
-    public function setClassName ( $className ) {
-        
+    public function setClassName($className)
+    {
         $this->className = $className;
-        
+
         return $this;
     }
 
     /**
-     *
+     * @param int $itemsPerPage
+     * @return void
      */
     public function setItemsPerPage(int $itemsPerPage): void
     {
@@ -398,7 +444,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param int $page
+     * @return void
      */
     public function setPage(int $page): void
     {
@@ -406,7 +453,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @return \Frootbox\Db\Row|null
+     * @throws \Exception
      */
     public function shift(): ?Row
     {
@@ -420,7 +468,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     *
+     * @param \Frootbox\Db\Row $row
+     * @return void
      */
     public function unshift(Row $row)
     {
