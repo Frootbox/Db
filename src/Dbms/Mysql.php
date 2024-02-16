@@ -14,23 +14,31 @@ class Mysql implements Interfaces\Dbms
     protected $pdo;
 
     protected $schema;
-    
+
     /**
-     *  
+     * @param string $host
+     * @param string $schema
+     * @param string $user
+     * @param string $password
+     * @param string $charset
      */
-    public function __construct(string $host, string $schema, string $user, string $password)
+    public function __construct(string $host, string $schema, string $user, string $password, string $charset = 'utf8mb4')
     {
-        $this->connect($host, $schema, $user, $password);
+        $this->connect($host, $schema, $user, $password, $charset);
     }
 
     /**
-     *
+     * @param string $host
+     * @param string $schema
+     * @param string $user
+     * @param string $password
+     * @return $this
      */
-    public function connect($host, $schema, $user, $password): Mysql
+    public function connect(string $host, string $schema, string $user, string $password, string $charset): Mysql
     {
         $this->schema = $schema;
 
-        $dsn = 'mysql:dbname=' . $schema . ';host=' . $host . ';charset=utf8mb4';
+        $dsn = 'mysql:dbname=' . $schema . ';host=' . $host . ';charset=' . $charset;
 
         $this->pdo = new \PDO($dsn, $user, $password, [
             \PDO::MYSQL_ATTR_FOUND_ROWS => true,
@@ -42,7 +50,7 @@ class Mysql implements Interfaces\Dbms
     }
 
     /**
-     * Delete record
+     * @deprecated
      */
     public function delete(array $params)
     {
@@ -50,22 +58,12 @@ class Mysql implements Interfaces\Dbms
 
         $this->execute($query);
 
-        /*
-        // Delete row
-        $stmt = $this->pdo->query('SELECT ROW_COUNT() as deletedRows');
-        $stmt->execute();
-
-        $result = $stmt->fetch();
-
-        d($result);
-        */
-
         return true;
     }
 
-
     /**
-     *
+     * @param \Frootbox\Db\Dbms\Mysql\Queries\Interfaces\QueryInterface $query
+     * @return mixed
      */
     public function execute(Mysql\Queries\Interfaces\QueryInterface $query)
     {
@@ -88,11 +86,10 @@ class Mysql implements Interfaces\Dbms
     }
 
     /**
-     *
+     * @deprecated
      */
     public function fetch(array $params): array
     {
-
         $query = new \Frootbox\Db\Dbms\Mysql\Queries\Select($params);
 
         $result = $this->execute($query);
@@ -100,50 +97,46 @@ class Mysql implements Interfaces\Dbms
         return $result->fetchAll();
     }
 
-
     /**
-     *
+     * @return mixed
      */
-    public function getLastInsertId ( ) {
-
+    public function getLastInsertId()
+    {
         return $this->pdo->lastInsertId();
     }
 
-
     /**
-     *
+     * @return string
      */
-    public function getSchema ( ): string
+    public function getSchema(): string
     {
         return $this->schema;
     }
 
-
     /**
-     *
+     * @param string $sql
+     * @return mixed
      */
-    public function prepare ( string $sql ) {
-
+    public function prepare(string $sql)
+    {
         $stmt = $this->pdo->prepare($sql);
 
         return $stmt;
-
     }
-    
-    
-    /**
-     * 
-     */
-    public function query ( $sql ) {
 
+    /**
+     * @param $sql
+     * @return mixed
+     */
+    public function query($sql)
+    {
         $stmt = $this->pdo->query($sql);
 
         return $stmt;
     }
 
-
     /**
-     *
+     * @return void
      */
     public function transactionStart(): void
     {
@@ -152,18 +145,19 @@ class Mysql implements Interfaces\Dbms
         }
     }
 
-
     /**
-     *
+     * @return void
      */
-    public function transactionCommit ( ) {
-
+    public function transactionCommit()
+    {
         $this->pdo->commit();
     }
 
-
     /**
-     * Update record
+     * @deprecated
+     *
+     * @param array $params
+     * @return void
      */
     public function update(array $params): void
     {

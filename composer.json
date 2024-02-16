@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "ext-pdo": "*"
     },
     "license": "GPL-3.0-or-later",
     "autoload": {
