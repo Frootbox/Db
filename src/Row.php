@@ -13,6 +13,7 @@ class Row implements RowInterface
     protected $db = null;
     protected $onInsertDefault = null;
     protected $changed = [ ];
+    protected string $primaryKey = 'id';
 
     /**
      * @param array|null $record
@@ -122,15 +123,10 @@ class Row implements RowInterface
     }
 
     /**
-     * @return mixed|null
-     */
-    public function getOnInsertDefaults()
-    {
-        return $this->onInsertDefault;
-    }
-
-    /**
      * Delete active record
+     *
+     * @return void
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function delete()
     {
@@ -139,7 +135,7 @@ class Row implements RowInterface
 
         $db->delete([
             'table' => $this->getTable(),
-            'where' => [ 'id' => $this->getId() ],
+            'where' => [ $this->primaryKey => $this->getPrimaryId() ],
             'limit' => 1
         ]);
     }
@@ -175,6 +171,22 @@ class Row implements RowInterface
     public function getModelClass(): string
     {
         return $this->model;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getOnInsertDefaults()
+    {
+        return $this->onInsertDefault;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryId(): mixed
+    {
+        return $this->data[$this->primaryKey] ?? null;
     }
 
     /**
