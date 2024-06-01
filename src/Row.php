@@ -9,7 +9,7 @@ class Row implements RowInterface
 {
     protected $table;
     protected $model;
-    protected $data;
+    protected $data = [];
     protected $db = null;
     protected $onInsertDefault = null;
     protected $changed = [ ];
@@ -21,7 +21,9 @@ class Row implements RowInterface
      */
     public function __construct(array $record = null, Db $db = null)
     {
-        $this->data = $record;
+        if ($record !== null) {
+            $this->data = $record;
+        }
 
         if ($db !== null) {
             $this->db = $db;
@@ -376,5 +378,17 @@ class Row implements RowInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return self
+     */
+    public static function fromArray(array $data): self
+    {
+        $row = new self;
+        $row->setData($data);
+
+        return $row;
     }
 }
