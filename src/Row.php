@@ -381,12 +381,20 @@ class Row implements RowInterface
     }
 
     /**
+     * Static constructor
+     *
+     * Construct row from array input
+     *
      * @param array $data
      * @return self
      */
     public static function fromArray(array $data): self
     {
-        $row = new self;
+        // Instantiate row
+        $class = get_called_class();
+        $row = new $class;
+
+        // Set data to row
         $row->setData($data);
 
         return $row;
