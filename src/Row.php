@@ -388,7 +388,7 @@ class Row implements RowInterface
      * @param array $data
      * @return self
      */
-    public static function fromArray(array $data): self
+    public static function fromArray(array $data): static
     {
         // Instantiate row
         $class = get_called_class();
