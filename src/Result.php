@@ -186,6 +186,14 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->result);
+    }
+
+    /**
      * @return mixed
      */
     public function jsonSerialize(): mixed
