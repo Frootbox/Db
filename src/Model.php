@@ -31,6 +31,7 @@ class Model
         array $where = null,
         array $order = null,
         int $limit = null,
+        bool $calcFoundRows = false,
     ): Result
     {
         if (!empty($where)) {
@@ -43,6 +44,10 @@ class Model
 
         if (!empty($limit)) {
             $params['limit'] = $limit;
+        }
+
+        if ($calcFoundRows) {
+            $params['calcFoundRows'] = true;
         }
 
         $params['table'] = $this->getTable();
