@@ -21,11 +21,30 @@ class Model
 
     /**
      * @param array|null $params
-     * @return \Frootbox\Db\Result
+     * @param array|null $where
+     * @param array|null $order
+     * @return Result
      * @throws \Frootbox\Exceptions\RuntimeError
      */
-    public function fetch(array $params = null): Result
+    public function fetch(
+        array $params = null,
+        array $where = null,
+        array $order = null,
+        int $limit = null,
+    ): Result
     {
+        if (!empty($where)) {
+            $params['where'] = $where;
+        }
+
+        if (!empty($order)) {
+            $params['order'] = $order;
+        }
+
+        if (!empty($limit)) {
+            $params['limit'] = $limit;
+        }
+
         $params['table'] = $this->getTable();
         $itemsPerPage = $params['limit'] ?? null;
 
@@ -60,11 +79,27 @@ class Model
     /**
      * @param array|null $params
      * @param array|null $options
-     * @return \Frootbox\Db\Row|null
+     * @param array|null $where
+     * @param array|null $order
+     * @return Row|null
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
-    public function fetchOne(array $params = null, array $options = null): ?Row
+    public function fetchOne(
+        array $params = null,
+        array $options = null,
+        array $where = null,
+        array $order = null,
+    ): ?Row
     {
         $params['limit'] = 1;
+
+        if (!empty($where)) {
+            $params['where'] = $where;
+        }
+
+        if (!empty($order)) {
+            $params['order'] = $order;
+        }
 
         $result = $this->fetch($params);
 
