@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
 namespace Frootbox\Db;
@@ -9,14 +9,51 @@ class Model
 {
     protected string $table;
     protected string $class;
-    protected \Frootbox\Db\Db $db;
 
     /**
      * @param \Frootbox\Db\Db $db
      */
-    public function __construct(\Frootbox\Db\Db $db)
+    public function __construct(
+        protected \Frootbox\Db\Db $db,
+    )
+    { }
+
+    /**
+     * @param \PDOException $e
+     * @return \Throwable
+     */
+    private function mapException(\PDOException $e): \Throwable
     {
-        $this->db = $db;
+        $sqlState = $e->getCode();
+        $message = $e->getMessage();
+
+        // Integrity constraint violation
+        if ($sqlState === '23000') {
+
+            // UNIQUE constraint
+            if (str_contains($message, 'Duplicate entry')) {
+                return new \Frootbox\Db\Exception\UniqueConstraintViolationException(
+                    message: 'Unique constraint violated',
+                    previous: $e
+                );
+            }
+
+            // Foreign key constraint
+            if (str_contains($message, 'foreign key constraint fails')) {
+                return new \Frootbox\Db\Exception\ForeignKeyViolationException(
+                    message: 'Foreign key constraint violated',
+                    previous: $e
+                );
+            }
+
+            return new \Frootbox\Db\Exception\ConstraintViolationException(
+                message: 'Integrity constraint violated',
+                previous: $e
+            );
+        }
+
+        // Fallback → unverändert durchreichen
+        return $e;
     }
 
     /**
@@ -260,7 +297,14 @@ class Model
             $stmt->bindValue(':' . $column, $value);
         }
 
-        $stmt->execute();
+        try {
+
+            // Execute query
+            $stmt->execute();
+        }
+        catch (\PDOException $e) {
+            throw $this->mapException($e);
+        }
 
         $rowId = $this->db->getLastInsertId();
 

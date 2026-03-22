@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
 namespace Frootbox\Db\Dbms\Mysql\Queries;
@@ -8,7 +8,7 @@ namespace Frootbox\Db\Dbms\Mysql\Queries;
 class Select extends AbstractQuery
 {
     /**
-     *
+     * @return string
      */
     protected function getBaseQuery(): string
     {
@@ -28,7 +28,6 @@ class Select extends AbstractQuery
         }
 
         $sql .= implode(',', $this->data['select']) . ' FROM ' . $this->getTable();
-
 
         return $sql;
     }
