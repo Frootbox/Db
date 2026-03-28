@@ -1,14 +1,14 @@
-<?php 
+<?php
 /**
- * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com> 
- * @date 2018-06-18
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
+ *
+ * @noinspection PhpUnnecessaryLocalVariableInspection
+ * @noinspection SqlNoDataSourceInspection
+ * @noinspection PhpFullyQualifiedNameUsageInspection
  */
 
 namespace Frootbox\Db\Dbms;
 
-/**
- * 
- */
 class Mysql implements Interfaces\Dbms
 {
     protected $pdo;
@@ -133,6 +133,14 @@ class Mysql implements Interfaces\Dbms
         $stmt = $this->pdo->query($sql);
 
         return $stmt;
+    }
+
+    /**
+     * @return void
+     */
+    public function rollback(): void
+    {
+        $this->pdo->rollBack();
     }
 
     /**
