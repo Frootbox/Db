@@ -11,7 +11,9 @@ class Column implements \JsonSerializable {
     protected $data = [ ];
 
     /**
+     * Create a column export wrapper.
      *
+     * @param array|null $data Optional INFORMATION_SCHEMA column metadata.
      */
     public function __construct ( array $data = null )
     {
@@ -23,7 +25,9 @@ class Column implements \JsonSerializable {
 
 
     /**
+     * Return the column name.
      *
+     * @return string
      */
     public function getName ( )
     {
@@ -32,7 +36,10 @@ class Column implements \JsonSerializable {
 
 
     /**
+     * Build ALTER TABLE SQL for adding this column after another column.
      *
+     * @param string $predecessor Column name that should precede the new column.
+     * @return string
      */
     public function getSqlForInsert ( $predecessor ): string
     {
@@ -52,7 +59,10 @@ class Column implements \JsonSerializable {
 
 
     /**
+     * Build ALTER TABLE SQL for updating this column definition.
      *
+     * @param string $predecessor Column name that should precede this column.
+     * @return string
      */
     public function getSqlForUpdate ( $predecessor ): string
     {
@@ -73,7 +83,10 @@ class Column implements \JsonSerializable {
 
 
     /**
+     * Import selected INFORMATION_SCHEMA column metadata fields.
      *
+     * @param array<string, mixed> $data Column metadata.
+     * @return void
      */
     public function importData ( array $data )
     {
@@ -103,7 +116,10 @@ class Column implements \JsonSerializable {
 
 
     /**
+     * Compare this column definition with existing column metadata.
      *
+     * @param array<string, mixed> $existingColumn Existing column metadata.
+     * @return bool
      */
     public function isEqualTo ( array $existingColumn ): bool
     {
@@ -121,7 +137,9 @@ class Column implements \JsonSerializable {
 
 
     /**
+     * Serialize column metadata.
      *
+     * @return array<string, mixed>
      */
     public function jsonSerialize ( )
     {
@@ -130,7 +148,10 @@ class Column implements \JsonSerializable {
 
 
     /**
+     * Set the table name used when generating ALTER TABLE SQL.
      *
+     * @param string $table Table name.
+     * @return Column
      */
     public function setTable ( $table ): Column
     {

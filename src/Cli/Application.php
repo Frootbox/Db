@@ -4,6 +4,12 @@ namespace Frootbox\Db\Cli;
 
 class Application
 {
+    /**
+     * Dispatch the command line invocation to the requested CLI command.
+     *
+     * @param array $argv Raw command line arguments including the executable name.
+     * @return int Process exit code.
+     */
     public function run(array $argv): int
     {
         $command = $argv[1] ?? null;
@@ -26,6 +32,11 @@ class Application
         return (new AccessorGeneratorCommand())->run(array_slice($argv, 2));
     }
 
+    /**
+     * Print the top-level CLI help text.
+     *
+     * @return void
+     */
     private function printHelp(): void
     {
         echo <<<'TXT'

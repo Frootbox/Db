@@ -14,7 +14,11 @@ class Parameter {
 
 
     /**
+     * Create a query parameter descriptor.
      *
+     * @param string $column Column name.
+     * @param string $key Placeholder key, including leading colon.
+     * @param mixed $value Bound value.
      */
     public function __construct ( $column, $key, $value ) {
 
@@ -25,7 +29,9 @@ class Parameter {
 
 
     /**
+     * Get the column associated with this parameter.
      *
+     * @return string
      */
     public function getColumn ( ): string {
 
@@ -34,7 +40,9 @@ class Parameter {
 
 
     /**
+     * Get the placeholder key used in the SQL query.
      *
+     * @return string
      */
     public function getKey ( ): string {
 
@@ -43,7 +51,9 @@ class Parameter {
 
 
     /**
+     * Check whether this parameter should be skipped during binding.
      *
+     * @return bool
      */
     public function getSkip ( ): bool
     {
@@ -52,7 +62,9 @@ class Parameter {
 
 
     /**
+     * Get the value that should be bound to the placeholder.
      *
+     * @return mixed
      */
     public function getValue ( ) {
 
@@ -61,7 +73,10 @@ class Parameter {
 
 
     /**
-     * Mark parameter to be skipped during query building
+     * Mark this parameter to be skipped during binding.
+     *
+     * @param bool $shouldSkip Whether the parameter should be skipped.
+     * @return $this
      */
     public function setSkip ( bool $shouldSkip ): Parameter {
 

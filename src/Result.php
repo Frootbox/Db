@@ -5,9 +5,9 @@
 
 namespace Frootbox\Db;
 
-/**
- *
- */
+    /**
+     * Lazy iterable wrapper around raw database records.
+     */
 class Result implements \Iterator, \JsonSerializable, \Countable
 {
     protected $db;
@@ -19,8 +19,10 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     protected $page = 1;
 
     /**
-     * @param array $record
-     * @return mixed
+     * Convert one raw record into its configured row object.
+     *
+     * @param array<string, mixed> $record Raw database record.
+     * @return Row
      * @throws \Exception
      */
     protected function getRow(array $record)
@@ -40,9 +42,11 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param array $result
-     * @param \Frootbox\Db\Db $db
-     * @param array|null $options
+     * Create a result set from raw records.
+     *
+     * @param array<int, array<string, mixed>|Row> $result Raw records or row objects.
+     * @param \Frootbox\Db\Db $db Database wrapper.
+     * @param array|null $options Options such as className.
      */
     public function __construct(
         array $result,
@@ -59,6 +63,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return a readable debug representation of the result.
+     *
      * @return string
      */
     public function __toString(): string
@@ -67,6 +73,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Remove all rows from the result.
+     *
      * @return void
      */
     public function clear(): void
@@ -75,6 +83,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return the current row, converting raw records lazily.
+     *
      * @return \Frootbox\Db\Row|null
      * @throws \Exception
      */
@@ -92,7 +102,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param array $values
+     * Move rows matching one of the given values into a new result.
+     *
+     * @param array<string, mixed|array<int, mixed>> $values Attribute/value filters.
      * @return $this
      */
     public function extractByValue(array $values): \Frootbox\Db\Result
@@ -127,8 +139,10 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param string $attribute
-     * @return array
+     * Extract one attribute value from every row.
+     *
+     * @param string $attribute Attribute name without get-prefix.
+     * @return array<int, mixed>
      */
     public function extractValues(string $attribute): array
     {
@@ -145,6 +159,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return the raw internal result array.
+     *
      * @return array
      */
     public function getData(): array
@@ -153,7 +169,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param int $id
+     * Check whether the result contains a row with the given id.
+     *
+     * @param int $id Row id.
      * @return bool
      */
     public function hasId(int $id): bool
@@ -168,8 +186,10 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param string $glue
-     * @param string $attribute
+     * Join one attribute from all rows into a string.
+     *
+     * @param string $glue Separator.
+     * @param string $attribute Attribute name without get-prefix.
      * @return string
      */
     public function implode(string $glue, string $attribute): string
@@ -186,6 +206,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Check whether the result contains no rows.
+     *
      * @return bool
      */
     public function isEmpty(): bool
@@ -194,6 +216,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Serialize all rows for json_encode().
+     *
      * @return mixed
      */
     public function jsonSerialize(): mixed
@@ -217,6 +241,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Advance the iterator pointer.
+     *
      * @return void
      */
     public function next(): void
@@ -225,6 +251,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return the current iterator key.
+     *
      * @return mixed
      */
     public function key(): mixed
@@ -233,7 +261,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param string $methodName
+     * Call a method on every row in the result.
+     *
+     * @param string $methodName Method name.
      * @return $this
      */
     public function map(string $methodName): Result
@@ -246,6 +276,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Check whether the iterator pointer is valid.
+     *
      * @return bool
      */
     public function valid(): bool
@@ -254,6 +286,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Rewind the iterator and normalize internal numeric keys.
+     *
      * @return void
      */
     public function rewind(): void
@@ -266,6 +300,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Count rows in the result.
+     *
      * @return int
      */
     public function count(): int
@@ -274,7 +310,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param string $itemId
+     * Get a row by id from the current result set.
+     *
+     * @param string $itemId Row id.
      * @return \Frootbox\Db\Row|null
      */
     public function getById(string $itemId): ?Row
@@ -289,8 +327,10 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param $columnCount
-     * @return array
+     * Split rows into a fixed number of columns.
+     *
+     * @param int $columnCount Number of columns.
+     * @return array<int, array<int, Row>>
      */
     public function getColumns($columnCount): array
     {
@@ -313,6 +353,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return the number of rows currently loaded in the result.
+     *
      * @return int
      */
     public function getCount(): int
@@ -321,6 +363,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return the current pagination page.
+     *
      * @return int
      */
     public function getPage(): int
@@ -329,6 +373,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return the total number of pagination pages.
+     *
      * @return float|int
      */
     public function getPages()
@@ -341,6 +387,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Return the total number of rows for SQL_CALC_FOUND_ROWS queries.
+     *
      * @return int
      */
     public function getTotal ( ): int
@@ -357,7 +405,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param \Frootbox\Db\Row $row
+     * Append a row object to the result.
+     *
+     * @param \Frootbox\Db\Row $row Row object.
      * @return void
      */
     public function push(Row $row): void
@@ -366,7 +416,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param array $record
+     * Append a raw database record to the result.
+     *
+     * @param array<string, mixed> $record Raw record.
      * @return void
      */
     public function pushRaw(array $record): void
@@ -375,7 +427,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param \Frootbox\Db\Result $result
+     * Append every row from another result.
+     *
+     * @param \Frootbox\Db\Result $result Result to merge.
      * @return void
      */
     public function pushResult(\Frootbox\Db\Result $result): void
@@ -386,7 +440,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param int $index
+     * Remove a row by its internal result index.
+     *
+     * @param int $index Internal index.
      * @return void
      */
     public function removeByIndex(int $index): void
@@ -399,8 +455,10 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param string $attribute
-     * @param mixed $value
+     * Remove rows whose attribute equals one of the given values.
+     *
+     * @param string $attribute Attribute name without get-prefix.
+     * @param mixed $value Single value or array of values.
      * @return void
      */
     public function removeByValue(string $attribute, mixed $value): void
@@ -424,6 +482,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Reverse the current result order.
+     *
      * @return void
      */
     public function reverse(): void
@@ -432,7 +492,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param $className
+     * Set the row class used to hydrate raw records.
+     *
+     * @param class-string<Row> $className Row class name.
      * @return $this
      */
     public function setClassName($className)
@@ -443,7 +505,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param int $itemsPerPage
+     * Set the number of items per pagination page.
+     *
+     * @param int $itemsPerPage Items per page.
      * @return void
      */
     public function setItemsPerPage(int $itemsPerPage): void
@@ -452,7 +516,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param int $page
+     * Set the current pagination page.
+     *
+     * @param int $page Page number.
      * @return void
      */
     public function setPage(int $page): void
@@ -461,6 +527,8 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * Remove and return the first row from the result.
+     *
      * @return \Frootbox\Db\Row|null
      * @throws \Exception
      */
@@ -476,7 +544,9 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param \Frootbox\Db\Row $row
+     * Prepend a row object to the result.
+     *
+     * @param \Frootbox\Db\Row $row Row object.
      * @return void
      */
     public function unshift(Row $row)

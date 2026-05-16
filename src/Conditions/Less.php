@@ -8,7 +8,9 @@ namespace Frootbox\Db\Conditions;
 class Less extends AbstractCondition
 {
     /**
+     * Render a less-than comparison.
      *
+     * @return string
      */
     public function toString(): string
     {
@@ -16,7 +18,9 @@ class Less extends AbstractCondition
     }
 
     /**
-     * @return array
+     * Return the bound comparison parameter.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters(): array
     {

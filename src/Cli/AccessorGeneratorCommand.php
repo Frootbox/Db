@@ -11,6 +11,12 @@ class AccessorGeneratorCommand
     private array $options = [];
     private array $arguments = [];
 
+    /**
+     * Run the accessor generator command.
+     *
+     * @param array $argv Command arguments without executable and command name.
+     * @return int Process exit code.
+     */
     public function run(array $argv): int
     {
         $this->parseArguments($argv);
@@ -67,6 +73,12 @@ class AccessorGeneratorCommand
         return 0;
     }
 
+    /**
+     * Split positional arguments and --key=value style options.
+     *
+     * @param array $argv Command arguments without executable and command name.
+     * @return void
+     */
     private function parseArguments(array $argv): void
     {
         foreach ($argv as $argument) {
@@ -82,6 +94,11 @@ class AccessorGeneratorCommand
         }
     }
 
+    /**
+     * Create a database wrapper from a bootstrap file or direct MySQL options.
+     *
+     * @return Db
+     */
     private function createDb(): Db
     {
         if (!empty($this->options['bootstrap'])) {
@@ -123,6 +140,12 @@ class AccessorGeneratorCommand
         ));
     }
 
+    /**
+     * Collect PHP files from a file or directory path.
+     *
+     * @param string $path Existing file or directory path.
+     * @return array<int, string>
+     */
     private function collectPhpFiles(string $path): array
     {
         if (is_file($path)) {
@@ -145,6 +168,13 @@ class AccessorGeneratorCommand
         return $files;
     }
 
+    /**
+     * Generate missing accessor methods for one row class file.
+     *
+     * @param string $file PHP file to inspect.
+     * @param Db $db Database wrapper used to load column metadata.
+     * @return array{contents:string, methodCount:int}|null Generated contents and method count, or null when skipped.
+     */
     private function processFile(string $file, Db $db): ?array
     {
         $contents = file_get_contents($file);
@@ -190,6 +220,12 @@ class AccessorGeneratorCommand
         ];
     }
 
+    /**
+     * Extract the fully qualified class name from PHP source code.
+     *
+     * @param string $contents PHP source code.
+     * @return string|null Fully qualified class name, or null when none is found.
+     */
     private function getClassName(string $contents): ?string
     {
         $tokens = token_get_all($contents);
@@ -212,6 +248,13 @@ class AccessorGeneratorCommand
         return null;
     }
 
+    /**
+     * Read a namespace or class name from a token stream.
+     *
+     * @param array $tokens Tokens returned by token_get_all().
+     * @param int $offset Token offset to start reading from.
+     * @return string
+     */
     private function readName(array $tokens, int $offset): string
     {
         $name = '';
@@ -237,6 +280,12 @@ class AccessorGeneratorCommand
         return $name;
     }
 
+    /**
+     * Read the default protected $table value from a row class.
+     *
+     * @param \ReflectionClass $reflection Reflected row class.
+     * @return string|null Table name, or null when no default table is configured.
+     */
     private function getTableFromClass(\ReflectionClass $reflection): ?string
     {
         if (!$reflection->hasProperty('table')) {
@@ -251,6 +300,13 @@ class AccessorGeneratorCommand
         return is_string($table) and $table !== '' ? $table : null;
     }
 
+    /**
+     * Load column metadata for a table from INFORMATION_SCHEMA.COLUMNS.
+     *
+     * @param Db $db Database wrapper.
+     * @param string $table Table name.
+     * @return array<int, array<string, mixed>>
+     */
     private function loadColumns(Db $db, string $table): array
     {
         $stmt = $db->prepare(
@@ -267,6 +323,13 @@ class AccessorGeneratorCommand
         return $stmt->fetchAll();
     }
 
+    /**
+     * Build source code for accessors that are missing from the class.
+     *
+     * @param \ReflectionClass $reflection Reflected row class.
+     * @param array<int, array<string, mixed>> $columns Column metadata rows.
+     * @return array<int, string> Method source code blocks.
+     */
     private function buildMissingMethods(\ReflectionClass $reflection, array $columns): array
     {
         $methods = [];
@@ -300,6 +363,12 @@ class AccessorGeneratorCommand
         return $methods;
     }
 
+    /**
+     * Infer a PHP scalar type from MySQL column metadata.
+     *
+     * @param array<string, mixed> $column Column metadata row.
+     * @return string PHP type name.
+     */
     private function getPhpType(array $column): string
     {
         $dataType = strtolower($column['DATA_TYPE']);
@@ -317,6 +386,14 @@ class AccessorGeneratorCommand
         };
     }
 
+    /**
+     * Render a getter method that delegates to Row::getAttribute().
+     *
+     * @param string $method Method name.
+     * @param string $attribute Row attribute name.
+     * @param string $type PHP return type.
+     * @return string Method source code.
+     */
     private function renderGetter(string $method, string $attribute, string $type): string
     {
         return <<<PHP
@@ -327,6 +404,13 @@ class AccessorGeneratorCommand
 PHP;
     }
 
+    /**
+     * Render an is-prefix or has-prefix convenience getter for boolean attributes.
+     *
+     * @param string $method Method name.
+     * @param string $attribute Row attribute name.
+     * @return string Method source code.
+     */
     private function renderBooleanGetter(string $method, string $attribute): string
     {
         return <<<PHP
@@ -337,6 +421,15 @@ PHP;
 PHP;
     }
 
+    /**
+     * Render a setter method that delegates to Row::setAttribute().
+     *
+     * @param string $method Method name.
+     * @param string $attribute Row attribute name.
+     * @param string $parameter Parameter name.
+     * @param string $type PHP parameter type.
+     * @return string Method source code.
+     */
     private function renderSetter(string $method, string $attribute, string $parameter, string $type): string
     {
         return <<<PHP
@@ -347,6 +440,13 @@ PHP;
 PHP;
     }
 
+    /**
+     * Insert generated methods before the final class closing brace.
+     *
+     * @param string $contents Original file contents.
+     * @param array<int, string> $methods Method source code blocks.
+     * @return string Updated file contents.
+     */
     private function insertMethods(string $contents, array $methods): string
     {
         $position = strrpos($contents, '}');
@@ -360,6 +460,11 @@ PHP;
         return substr($contents, 0, $position) . $methodBlock . substr($contents, $position);
     }
 
+    /**
+     * Print command-specific help text.
+     *
+     * @return void
+     */
     private function printHelp(): void
     {
         echo <<<'TXT'

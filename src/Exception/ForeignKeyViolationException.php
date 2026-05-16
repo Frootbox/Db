@@ -5,6 +5,9 @@
 
 namespace Frootbox\Db\Exception;
 
+/**
+ * Exception for foreign-key constraint violations.
+ */
 class ForeignKeyViolationException extends ConstraintViolationException
 {
     

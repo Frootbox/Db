@@ -5,6 +5,9 @@
 
 namespace Frootbox\Db\Exception;
 
+/**
+ * Exception for unique-key constraint violations.
+ */
 class UniqueConstraintViolationException extends ConstraintViolationException
 {
 

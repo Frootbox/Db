@@ -10,7 +10,9 @@ class Factory {
     protected $db;
 
     /**
+     * Create a database export factory.
      *
+     * @param \Frootbox\Db\Db $db Database wrapper.
      */
     public function __construct ( \Frootbox\Db\Db $db )
     {
@@ -19,7 +21,10 @@ class Factory {
 
 
     /**
+     * Export table metadata.
      *
+     * @param string $type Export type, currently "array" or JSON via return value encoding.
+     * @return mixed
      */
     public function export ( $type = 'array' )
     {
@@ -45,7 +50,9 @@ class Factory {
 
 
     /**
+     * Load all tables and their columns from the current schema.
      *
+     * @return array<int, \Frootbox\Db\Export\Table>
      */
     public function getTables ( )
     {

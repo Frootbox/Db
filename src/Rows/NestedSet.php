@@ -8,7 +8,10 @@ namespace Frootbox\Db\Rows;
 class NestedSet extends \Frootbox\Db\Row
 {
     /**
-     * Insert new child
+     * Insert a new child node below this node.
+     *
+     * @param \Frootbox\Db\Row $child Child row to insert.
+     * @return \Frootbox\Db\Row Inserted child row.
      */
     public function appendChild(\Frootbox\Db\Row $child): \Frootbox\Db\Row
     {
@@ -58,7 +61,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Delete this node if it has no children and close the nested-set gap.
      *
+     * @return bool
      */
     public function delete()
     {
@@ -101,7 +106,10 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
-     * 
+     * Fetch direct children of this node.
+     *
+     * @param array|null $params Optional fetch parameters, including where.
+     * @return \Frootbox\Db\Result
      */
     public function getChildren(array $params = null)
     {
@@ -122,7 +130,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Fetch the first direct child of this node.
      *
+     * @return \Frootbox\Persistence\Page|null
      */
     public function getFirstChild(): \Frootbox\Persistence\Page
     {
@@ -141,7 +151,10 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Fetch this node and all descendants.
      *
+     * @param array|null $params Optional fetch parameters.
+     * @return \Frootbox\Db\Result
      */
     public function getOffspring(array $params = null)
     {
@@ -165,7 +178,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Fetch the parent node.
      *
+     * @return NestedSet
      */
     public function getParent(): NestedSet
     {
@@ -183,7 +198,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Fetch the previous sibling node.
      *
+     * @return \Frootbox\Db\Row|null
      */
     public function getPreviousSibling(): ?\Frootbox\Db\Row
     {
@@ -209,7 +226,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Fetch all sibling nodes with the same root and parent.
      *
+     * @return \Frootbox\Db\Result
      */
     public function getSiblings()
     {
@@ -230,7 +249,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
-     * Get trace to root node
+     * Fetch the trace from this node to the root node.
+     *
+     * @return \Frootbox\Db\Result
      */
     public function getTrace()
     {
@@ -252,7 +273,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Check whether this node has descendants.
      *
+     * @return bool
      */
     public function hasChildren(): bool
     {
@@ -260,7 +283,9 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Fetch the next sibling node.
      *
+     * @return \Frootbox\Db\Row|null
      */
     public function getNextSibling(): ?\Frootbox\Db\Row
     {
@@ -286,7 +311,10 @@ class NestedSet extends \Frootbox\Db\Row
     }
 
     /**
+     * Check whether this node is a descendant of another node.
      *
+     * @param NestedSet $row Potential ancestor node.
+     * @return bool
      */
     public function isChildOf(NestedSet $row): bool
     {

@@ -9,7 +9,9 @@ namespace Frootbox\Db\Conditions;
 class Like extends AbstractCondition
 {
     /**
+     * Render a LIKE comparison.
      *
+     * @return string
      */
     public function toString(): string
     {
@@ -17,7 +19,9 @@ class Like extends AbstractCondition
     }
 
     /**
-     * @return array
+     * Return the bound LIKE parameter.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters(): array
     {

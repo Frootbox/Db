@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Base class for adapter query builders.
  */
 
 namespace Frootbox\Db\Dbms\Mysql\Queries;
@@ -14,7 +14,9 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
     protected $parameters = [ ];
 
     /**
+     * Create a query from adapter parameter data.
      *
+     * @param array $data Query data such as table, data, where, order, and limit.
      */
     public function __construct ( array $data ) {
 
@@ -31,13 +33,17 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
 
 
     /**
+     * Return the SQL fragment before WHERE, ORDER, and LIMIT clauses.
      *
+     * @return string
      */
     abstract protected function getBaseQuery ( ): string;
 
 
     /**
+     * Return all parameters that should be bound to the query.
      *
+     * @return array<int, \Frootbox\Db\Conditions\Parameter>
      */
     public function getParameters ( ): array
     {
@@ -46,7 +52,10 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
 
 
     /**
+     * Append parameters produced by nested condition objects.
      *
+     * @param \Frootbox\Db\Conditions\Parameter ...$parameters Parameters to append.
+     * @return Interfaces\QueryInterface
      */
     public function appendExtraParameters ( \Frootbox\Db\Conditions\Parameter ...$parameters): Interfaces\QueryInterface {
 
@@ -60,7 +69,11 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
 
 
     /**
+     * Render nested AND/OR where constraints and collect parameters.
      *
+     * @param string $type Constraint type, usually "and" or "or".
+     * @param array $params Constraint values.
+     * @return string
      */
     protected function injectQueryConstraint ( string $type, array $params ) {
 
@@ -115,7 +128,9 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
 
 
     /**
+     * Return the target table from the query data.
      *
+     * @return string
      */
     public function getTable ( ): string {
 
@@ -128,7 +143,9 @@ abstract class AbstractQuery implements Interfaces\QueryInterface {
 
 
     /**
+     * Render the complete SQL query.
      *
+     * @return string
      */
     public function toString()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Serializable representation of a database table and its columns.
  */
 
 namespace Frootbox\Db\Export;
@@ -15,7 +15,11 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Create an export table wrapper.
      *
+     * @param \Frootbox\Db\Db $db Database wrapper.
+     * @param string $name Table name.
+     * @param array|null $data Optional table metadata.
      */
     public function __construct( \Frootbox\Db\Db $db, string $name, array $data = null )
     {
@@ -32,7 +36,10 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Add a column definition to the table export.
      *
+     * @param \Frootbox\Db\Export\Column $column Column definition.
+     * @return Table
      */
     public function addColumn ( \Frootbox\Db\Export\Column $column ): Table
     {
@@ -46,7 +53,9 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Check whether the table exists in the current database schema.
      *
+     * @return bool
      */
     public function exists ( )
     {
@@ -59,7 +68,9 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Return all loaded column definitions.
      *
+     * @return array<int, \Frootbox\Db\Export\Column>
      */
     public function getColumns ( )
     {
@@ -69,7 +80,10 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Return one table metadata value.
      *
+     * @param string $attribute Metadata key.
+     * @return mixed
      */
     public function getData ( $attribute )
     {
@@ -78,7 +92,9 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Return the table name.
      *
+     * @return string
      */
     public function getName ( )
     {
@@ -87,7 +103,9 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Serialize table and column metadata.
      *
+     * @return array<string, mixed>
      */
     public function jsonSerialize ( )
     {
@@ -100,7 +118,9 @@ class Table implements \JsonSerializable {
 
 
     /**
+     * Load columns for this table from INFORMATION_SCHEMA.COLUMNS.
      *
+     * @return void
      */
     public function loadColumns ( )
     {

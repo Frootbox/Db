@@ -10,7 +10,9 @@ class MatchColumn extends AbstractCondition {
 
 
     /**
+     * Render a comparison between two columns.
      *
+     * @return string
      */
     public function toString ( ): string {
 
@@ -19,7 +21,9 @@ class MatchColumn extends AbstractCondition {
 
 
     /**
-     * @return array
+     * Return bound parameters for the condition.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters ( ): array {
 

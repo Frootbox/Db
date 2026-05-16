@@ -7,7 +7,9 @@ namespace Frootbox\Db\Conditions;
 class GreaterOrEqual extends AbstractCondition {
 
     /**
+     * Render a greater-than-or-equal comparison.
      *
+     * @return string
      */
     public function toString ( ): string {
 
@@ -16,7 +18,9 @@ class GreaterOrEqual extends AbstractCondition {
 
 
     /**
-     * @return array
+     * Return the bound comparison parameter.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters ( ): array {
 

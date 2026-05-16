@@ -12,19 +12,25 @@ namespace Frootbox\Db\Dbms\Interfaces;
 interface Dbms
 {
     /**
-     * @param string $host
-     * @param string $schema
-     * @param string $user
-     * @param string $password
+     * Create a DBMS adapter connection.
+     *
+     * @param string $host Database host.
+     * @param string $schema Database schema name.
+     * @param string $user Database user.
+     * @param string $password Database password.
      */
     public function __construct(string $host, string $schema, string $user, string $password);
 
     /**
+     * Roll back the active transaction.
+     *
      * @return void
      */
     public function rollback(): void;
 
     /**
+     * Start a transaction.
+     *
      * @return void
      */
     public function transactionStart(): void;

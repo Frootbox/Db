@@ -11,7 +11,9 @@ class Model
     protected string $class;
 
     /**
-     * @param \Frootbox\Db\Db $db
+     * Create a model bound to a database connection.
+     *
+     * @param \Frootbox\Db\Db $db Database wrapper.
      */
     public function __construct(
         protected \Frootbox\Db\Db $db,
@@ -19,8 +21,10 @@ class Model
     { }
 
     /**
-     * @param \PDOException $e
-     * @return \Throwable
+     * Convert PDO integrity exceptions into package-specific exceptions.
+     *
+     * @param \PDOException $e Original PDO exception.
+     * @return \Throwable Mapped exception.
      */
     private function mapException(\PDOException $e): \Throwable
     {
@@ -57,9 +61,13 @@ class Model
     }
 
     /**
-     * @param array|null $params
-     * @param array|null $where
-     * @param array|null $order
+     * Fetch multiple rows from the model table.
+     *
+     * @param array|null $params Select parameters.
+     * @param array|null $where Optional where constraints merged into $params.
+     * @param array|null $order Optional order clauses merged into $params.
+     * @param int|null $limit Optional limit merged into $params.
+     * @param bool $calcFoundRows Whether to request the total row count.
      * @return Result
      * @throws \Frootbox\Exceptions\RuntimeError
      */
@@ -119,10 +127,12 @@ class Model
     }
 
     /**
-     * @param array|null $params
-     * @param array|null $options
-     * @param array|null $where
-     * @param array|null $order
+     * Fetch the first row matching the given parameters.
+     *
+     * @param array|null $params Select parameters.
+     * @param array|null $options Options such as createOnMiss.
+     * @param array|null $where Optional where constraints merged into $params.
+     * @param array|null $order Optional order clauses merged into $params.
      * @return Row|null
      * @throws \Frootbox\Exceptions\RuntimeError
      */
@@ -157,7 +167,9 @@ class Model
     }
 
     /**
-     * @param $rowId
+     * Fetch one row by its numeric id.
+     *
+     * @param int|string $rowId Row id.
      * @return \Frootbox\Db\Row
      * @throws \Frootbox\Exceptions\NotFound
      * @throws \Frootbox\Exceptions\RuntimeError
@@ -180,8 +192,10 @@ class Model
     }
 
     /**
-     * @param $sql
-     * @param array|null $params
+     * Fetch rows using a raw prepared SQL query.
+     *
+     * @param string $sql SQL query.
+     * @param array|null $params Placeholder values keyed by placeholder name.
      * @return \Frootbox\Db\Result
      */
     public function fetchByQuery($sql, array $params = null): \Frootbox\Db\Result
@@ -210,6 +224,8 @@ class Model
     }
 
     /**
+     * Get the row class used by this model.
+     *
      * @return string
      */
     public function getClass(): string
@@ -218,6 +234,8 @@ class Model
     }
 
     /**
+     * Get the table name managed by this model.
+     *
      * @return string
      * @throws \Frootbox\Exceptions\RuntimeError
      */
@@ -231,7 +249,12 @@ class Model
     }
 
     /**
-     * @deprecated
+     * Persist a new row.
+     *
+     * @deprecated Use persist() instead.
+     *
+     * @param \Frootbox\Db\Row $row Row to insert.
+     * @return \Frootbox\Db\Row Persisted row with id and database connection.
      */
     public function insert(\Frootbox\Db\Row $row): \Frootbox\Db\Row
     {
@@ -239,10 +262,10 @@ class Model
     }
 
     /**
-     * Persist active record
+     * Persist a new active record to the model table.
      *
-     * @param Row $row
-     * @return Row
+     * @param Row $row Row to insert.
+     * @return Row Persisted row with id and database connection.
      */
     public function persist(\Frootbox\Db\Row $row): \Frootbox\Db\Row
     {
@@ -319,7 +342,9 @@ class Model
     }
 
     /**
-     * @param $class
+     * Set the row class used by this model.
+     *
+     * @param class-string<Row> $class Row class name.
      * @return void
      */
     public function setClass ( $class ): void
@@ -328,7 +353,10 @@ class Model
     }
 
     /**
-     * Set models table
+     * Set the table managed by this model.
+     *
+     * @param string $table Table name.
+     * @return void
      */
     public function setTable(string $table): void
     {
@@ -336,7 +364,9 @@ class Model
     }
 
     /**
-     * Truncate table
+     * Truncate the model table.
+     *
+     * @return void
      */
     public function truncate(): void
     {

@@ -5,6 +5,9 @@
 
 namespace Frootbox\Db\Exception;
 
+/**
+ * Exception for generic database constraint violations.
+ */
 class ConstraintViolationException extends DatabaseException
 {
 

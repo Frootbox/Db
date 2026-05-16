@@ -10,7 +10,9 @@ class LessOrEqual extends AbstractCondition {
 
 
     /**
+     * Render a less-than-or-equal comparison.
      *
+     * @return string
      */
     public function toString ( ): string {
 
@@ -19,7 +21,9 @@ class LessOrEqual extends AbstractCondition {
 
 
     /**
-     * @return array
+     * Return the bound comparison parameter.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters ( ): array {
 

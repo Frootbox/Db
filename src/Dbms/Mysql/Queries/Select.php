@@ -8,6 +8,8 @@ namespace Frootbox\Db\Dbms\Mysql\Queries;
 class Select extends AbstractQuery
 {
     /**
+     * Render the SELECT base query.
+     *
      * @return string
      */
     protected function getBaseQuery(): string

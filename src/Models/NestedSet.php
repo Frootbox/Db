@@ -8,7 +8,11 @@ namespace Frootbox\Db\Models;
 abstract class NestedSet extends \Frootbox\Db\Model
 {
     /**
-     * @param \Frootbox\Db\Rows\NestedSet $node
+     * Recursively rewrite left/right ids below a node.
+     *
+     * @param \Frootbox\Db\Rows\NestedSet $node Node to process.
+     * @param int $runningId Current running nested-set id.
+     * @return int Next running nested-set id.
      */
     private function rewriteIdsRecursive(\Frootbox\Db\Rows\NestedSet $node, int $runningId = 0): int
     {
@@ -25,7 +29,11 @@ abstract class NestedSet extends \Frootbox\Db\Model
     }
 
     /**
+     * Fetch a flattened tree for one root node.
      *
+     * @param mixed $rootId Root node id.
+     * @param array|null $params Optional tree parameters.
+     * @return \Frootbox\Db\Result
      */
     public function getTree($rootId, array $params = null): \Frootbox\Db\Result
     {
@@ -69,7 +77,10 @@ abstract class NestedSet extends \Frootbox\Db\Model
     
     
     /**
-     * 
+     * Insert a new root node and initialize its rootId.
+     *
+     * @param \Frootbox\Db\Rows\NestedSet $rootNode Root node row.
+     * @return \Frootbox\Db\Row
      */
     public function insertRoot ( \Frootbox\Db\Rows\NestedSet $rootNode ): \Frootbox\Db\Row {
         
@@ -91,7 +102,10 @@ abstract class NestedSet extends \Frootbox\Db\Model
     }
 
     /**
+     * Recalculate left/right ids for an entire root tree.
      *
+     * @param mixed $rootId Root node id.
+     * @return void
      */
     public function rewriteIds($rootId): void
     {

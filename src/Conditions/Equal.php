@@ -9,6 +9,8 @@ namespace Frootbox\Db\Conditions;
 class Equal extends AbstractCondition
 {
     /**
+     * Render a column equality comparison.
+     *
      * @return string
      */
     public function toString(): string
@@ -17,7 +19,9 @@ class Equal extends AbstractCondition
     }
 
     /**
-     * @return array
+     * Return the bound equality parameter.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters(): array
     {

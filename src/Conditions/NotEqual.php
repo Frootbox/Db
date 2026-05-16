@@ -9,7 +9,9 @@ namespace Frootbox\Db\Conditions;
 class NotEqual extends AbstractCondition
 {
     /**
+     * Render a not-equal comparison.
      *
+     * @return string
      */
     public function toString ( ): string {
 
@@ -18,7 +20,9 @@ class NotEqual extends AbstractCondition
 
 
     /**
-     * @return array
+     * Return the bound comparison parameter.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters ( ): array {
 

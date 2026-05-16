@@ -5,6 +5,9 @@
 
 namespace Frootbox\Db\Exception;
 
+/**
+ * Base exception for database errors raised by this package.
+ */
 class DatabaseException extends \RuntimeException
 {
 

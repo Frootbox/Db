@@ -9,7 +9,9 @@ interface QueryInterface
 {
 
     /**
+     * Return the table used by the query.
      *
+     * @return string
      */
     public function getTable ( ): string;
 

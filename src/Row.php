@@ -18,8 +18,10 @@ class Row implements RowInterface
     protected static array $loggedDeprecatedMagicCallSites = [];
 
     /**
-     * @param array|null $record
-     * @param Db|null $db
+     * Create a row from an optional database record and connection.
+     *
+     * @param array|null $record Raw column values.
+     * @param Db|null $db Database wrapper used for persistence operations.
      */
     public function __construct(array $record = null, Db $db = null)
     {
@@ -33,8 +35,13 @@ class Row implements RowInterface
     }
     
     /**
-     * @param $method
-     * @param array|null $params
+     * Handle legacy dynamic accessor methods with get, set, is, or has prefixes.
+     *
+     * Explicit methods should be preferred in new row classes. This method is
+     * kept for backward compatibility and logs deprecated dynamic access.
+     *
+     * @param string $method Called method name.
+     * @param array|null $params Called method parameters.
      * @return $this|bool|mixed|null
      * @throws \Exception
      */
@@ -76,6 +83,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Return a readable debug representation of the row.
+     *
      * @return string
      */
     public function __toString()
@@ -84,6 +93,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Get the database connection assigned to this row.
+     *
      * @return Db
      * @throws \Frootbox\Exceptions\RuntimeError
      */
@@ -97,7 +108,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @return Row
+     * Clone and insert the current row as a new database record.
+     *
+     * @return Row Newly persisted duplicate row.
      */
     public function duplicate(): Row
     {
@@ -108,7 +121,7 @@ class Row implements RowInterface
     }
 
     /**
-     * Delete active record
+     * Delete this row from its table.
      *
      * @return void
      * @throws \Frootbox\Exceptions\RuntimeError
@@ -126,7 +139,7 @@ class Row implements RowInterface
     }
 
     /**
-     * Get raw attribute value from the row data.
+     * Get a raw attribute value from the row data.
      *
      * Explicit getters in concrete row classes should use this method instead
      * of relying on __call().
@@ -144,7 +157,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @return array
+     * Return all raw row data.
+     *
+     * @return array<string, mixed>
      */
     public function getData(): array
     {
@@ -152,7 +167,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param $attribute
+     * Get a raw attribute value.
+     *
+     * @param string $attribute Attribute name.
      * @return mixed|null
      */
     public function getDataRaw ( $attribute )
@@ -161,6 +178,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Create this row's model/repository instance.
+     *
      * @return Model
      */
     public function getModel(): Model
@@ -169,6 +188,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Get the configured model class name.
+     *
      * @return string
      */
     public function getModelClass(): string
@@ -177,7 +198,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @return mixed|null
+     * Get default values applied when the row is inserted.
+     *
+     * @return array|null
      */
     public function getOnInsertDefaults()
     {
@@ -185,6 +208,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Get the value of the configured primary key.
+     *
      * @return mixed
      */
     public function getPrimaryId(): mixed
@@ -193,6 +218,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Create this row's repository instance.
+     *
      * @return Model
      */
     public function getRepository(): Model
@@ -201,6 +228,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Get the table name assigned to this row.
+     *
      * @return mixed
      * @throws \Frootbox\Exceptions\RuntimeError
      */
@@ -225,7 +254,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param $column
+     * Check whether a raw column value exists on this row.
+     *
+     * @param string $column Column name.
      * @return bool
      */
     public function hasColumn($column): bool
@@ -234,7 +265,11 @@ class Row implements RowInterface
     }
 
     /**
-     * Method can be overwritten to perform actions on the object before being inserted into the database
+     * Hook called before the row is inserted.
+     *
+     * Override this in subclasses to prepare row data before persistence.
+     *
+     * @return void
      */
     public function onBeforeInsert(): void
     {
@@ -242,6 +277,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Reload this row's data from the database.
+     *
      * @return void
      * @throws \Frootbox\Exceptions\NotFound
      */
@@ -254,6 +291,8 @@ class Row implements RowInterface
     }
 
     /**
+     * Persist changed attributes on this row.
+     *
      * @return $this
      * @throws \Frootbox\Exceptions\RuntimeError
      */
@@ -302,7 +341,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param array $data
+     * Merge raw data into the row and mark changed values.
+     *
+     * @param array<string, mixed> $data Raw row data.
      * @return $this
      */
     public function setData(array $data): \Frootbox\Db\Row
@@ -332,7 +373,7 @@ class Row implements RowInterface
     }
 
     /**
-     * Set raw attribute value and mark it as changed when needed.
+     * Set a raw attribute value and mark it as changed when needed.
      *
      * Explicit setters in concrete row classes should use this method instead
      * of relying on __call().
@@ -379,7 +420,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param Db $db
+     * Assign a database connection to this row.
+     *
+     * @param Db $db Database wrapper.
      * @return $this
      */
     public function setDb(\Frootbox\Db\Db $db)
@@ -390,7 +433,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param $id
+     * Set the row id.
+     *
+     * @param mixed $id Row id.
      * @return $this
      */
     public function setId($id)
@@ -401,7 +446,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param $model
+     * Set the model/repository class name.
+     *
+     * @param class-string<Model> $model Model class name.
      * @return $this
      */
     public function setModel($model): Row
@@ -412,7 +459,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param $table
+     * Set the database table name.
+     *
+     * @param string $table Table name.
      * @return $this
      */
     public function setTable($table): Row
@@ -423,7 +472,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param $mixed
+     * Remove one or more raw attributes from the row data.
+     *
+     * @param string|array<int, string> $mixed Attribute name or list of names.
      * @return $this
      */
     public function unset($mixed): Row
@@ -440,12 +491,10 @@ class Row implements RowInterface
     }
 
     /**
-     * Static constructor
+     * Construct a row from an array without assigning a database connection.
      *
-     * Construct row from array input
-     *
-     * @param array $data
-     * @return self
+     * @param array<string, mixed> $data Raw row data.
+     * @return static
      */
     public static function fromArray(array $data): static
     {
@@ -460,8 +509,10 @@ class Row implements RowInterface
     }
 
     /**
-     * @param string $attribute
-     * @param mixed $value
+     * Check whether assigning a value would change an attribute.
+     *
+     * @param string $attribute Attribute name.
+     * @param mixed $value New value.
      * @return bool
      */
     protected function hasAttributeChanged(string $attribute, mixed $value): bool
@@ -480,7 +531,9 @@ class Row implements RowInterface
     }
 
     /**
-     * @param string $method
+     * Log one deprecation message for a legacy magic call site.
+     *
+     * @param string $method Method name handled by __call().
      * @return void
      */
     protected function logDeprecatedMagicCall(string $method): void

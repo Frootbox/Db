@@ -9,7 +9,9 @@ namespace Frootbox\Db\Conditions;
 class InArray extends AbstractCondition
 {
     /**
+     * Render an IN (...) comparison.
      *
+     * @return string
      */
     public function toString(): string
     {
@@ -17,7 +19,9 @@ class InArray extends AbstractCondition
     }
 
     /**
-     * @return array
+     * Return bound parameters for the condition.
+     *
+     * @return array<int, Parameter>
      */
     public function getParameters ( ): array {
 

@@ -7,7 +7,9 @@ namespace Frootbox\Db\Dbms\Mysql\Queries;
 class Update extends AbstractQuery
 {
     /**
+     * Render the UPDATE base query and handle NULL assignments.
      *
+     * @return string
      */
     protected function getBaseQuery(): string
     {
