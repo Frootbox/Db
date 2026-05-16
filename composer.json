@@ -13,7 +13,7 @@
     "require": {
         "php": ">=8.0",
         "ext-pdo": "*",
-        "frootbox/exceptions": "^0.0.6"
+        "frootbox/exceptions": "^0.1"
     },
     "license": "GPL-3.0-or-later",
     "bin": [
