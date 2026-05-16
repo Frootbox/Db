@@ -66,8 +66,9 @@ class Db
      *
      * Create a model/repository instance.
      *
-     * @param class-string<Model> $model Model class name.
-     * @return Model
+     * @template TModel of Model
+     * @param class-string<TModel> $model Model class name.
+     * @return TModel
      */
     public function getModel($model): Model
     {
@@ -78,7 +79,7 @@ class Db
      * Create a generic model for a table without a custom repository class.
      *
      * @param string $table Table name.
-     * @return Model
+     * @return Model<Row>
      */
     public function getModelRaw($table): Model
     {
@@ -94,8 +95,9 @@ class Db
     /**
      * Create a repository instance for the given model class.
      *
-     * @param class-string<Model> $model Model class name.
-     * @return Model
+     * @template TModel of Model
+     * @param class-string<TModel> $model Model class name.
+     * @return TModel
      */
     public function getRepository($model): Model
     {

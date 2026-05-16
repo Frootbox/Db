@@ -5,9 +5,16 @@
 
 namespace Frootbox\Db;
 
+/**
+ * @template TRow of Row
+ */
 class Model
 {
     protected string $table;
+
+    /**
+     * @var class-string<TRow>
+     */
     protected string $class;
 
     /**
@@ -133,7 +140,7 @@ class Model
      * @param array|null $options Options such as createOnMiss.
      * @param array|null $where Optional where constraints merged into $params.
      * @param array|null $order Optional order clauses merged into $params.
-     * @return Row|null
+     * @return TRow|null
      * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function fetchOne(
@@ -155,6 +162,7 @@ class Model
 
         $result = $this->fetch($params);
 
+        /** @var TRow|null $row */
         $row = $result->current();
 
         if ($row === null and !empty($options['createOnMiss'])) {
@@ -170,7 +178,7 @@ class Model
      * Fetch one row by its numeric id.
      *
      * @param int|string $rowId Row id.
-     * @return \Frootbox\Db\Row
+     * @return TRow
      * @throws \Frootbox\Exceptions\NotFound
      * @throws \Frootbox\Exceptions\RuntimeError
      */
@@ -188,6 +196,7 @@ class Model
 
         $className = $record['customClass'] ?? $record['className'] ?? $this->getClass();
 
+        /** @var class-string<TRow> $className */
         return new $className($record, $this->db);
     }
 
@@ -226,7 +235,7 @@ class Model
     /**
      * Get the row class used by this model.
      *
-     * @return string
+     * @return class-string<TRow>
      */
     public function getClass(): string
     {
@@ -344,7 +353,7 @@ class Model
     /**
      * Set the row class used by this model.
      *
-     * @param class-string<Row> $class Row class name.
+     * @param class-string<TRow> $class Row class name.
      * @return void
      */
     public function setClass ( $class ): void
