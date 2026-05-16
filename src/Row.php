@@ -420,8 +420,8 @@ class Row implements RowInterface
             $this->data = [];
         }
 
-        if (!$this->hasAttributeChanged($attribute, $value)) {
-            return $this;
+        if (is_bool($value)) {
+            $value = !empty($value) ? 1 : 0;
         }
 
         // Convert value for boolean setter
@@ -432,6 +432,10 @@ class Row implements RowInterface
         // Convert value for boolean setter
         if (str_starts_with($attribute, 'has')) {
             $value = !empty($value) ? 1 : 0;
+        }
+
+        if (!$this->hasAttributeChanged($attribute, $value)) {
+            return $this;
         }
 
         $this->data[$attribute] = $value;

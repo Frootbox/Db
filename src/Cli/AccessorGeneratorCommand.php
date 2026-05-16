@@ -852,6 +852,17 @@ class AccessorGeneratorCommand
      */
     private function renderGetter(string $method, string $attribute, string $type): string
     {
+        if ($type === '?bool') {
+            return <<<PHP
+    public function {$method}(): {$type}
+    {
+        \$value = \$this->getAttribute('{$attribute}');
+
+        return \$value === null ? null : !empty(\$value);
+    }
+PHP;
+        }
+
         return <<<PHP
     public function {$method}(): {$type}
     {
