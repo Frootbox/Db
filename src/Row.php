@@ -167,6 +167,16 @@ class Row implements RowInterface
     }
 
     /**
+     * Get the creation timestamp stored in the conventional date column.
+     *
+     * @return string|null
+     */
+    public function getDate(): ?string
+    {
+        return $this->getAttribute('date');
+    }
+
+    /**
      * Get a raw attribute value.
      *
      * @param string $attribute Attribute name.
@@ -175,6 +185,18 @@ class Row implements RowInterface
     public function getDataRaw ( $attribute )
     {
         return $this->getAttribute($attribute);
+    }
+
+    /**
+     * Get the conventional numeric row id.
+     *
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        $id = $this->getAttribute('id');
+
+        return $id !== null ? (int) $id : null;
     }
 
     /**
@@ -240,6 +262,16 @@ class Row implements RowInterface
         }
 
         return $this->table;
+    }
+
+    /**
+     * Get the update timestamp stored in the conventional updated column.
+     *
+     * @return string|null
+     */
+    public function getUpdated(): ?string
+    {
+        return $this->getAttribute('updated');
     }
 
     /**
@@ -433,16 +465,25 @@ class Row implements RowInterface
     }
 
     /**
+     * Set the creation timestamp stored in the conventional date column.
+     *
+     * @param string|null $date Creation timestamp.
+     * @return $this
+     */
+    public function setDate(?string $date): static
+    {
+        return $this->setAttribute('date', $date);
+    }
+
+    /**
      * Set the row id.
      *
      * @param mixed $id Row id.
      * @return $this
      */
-    public function setId($id)
+    public function setId($id): static
     {
-        $this->data['id'] = $id;
-        
-        return $this;
+        return $this->setAttribute('id', $id);
     }
 
     /**
@@ -469,6 +510,17 @@ class Row implements RowInterface
         $this->table = $table;
 
         return $this;
+    }
+
+    /**
+     * Set the update timestamp stored in the conventional updated column.
+     *
+     * @param string|null $updated Update timestamp.
+     * @return $this
+     */
+    public function setUpdated(?string $updated): static
+    {
+        return $this->setAttribute('updated', $updated);
     }
 
     /**

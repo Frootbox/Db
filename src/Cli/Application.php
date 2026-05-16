@@ -27,9 +27,16 @@ class Application
             return 1;
         }
 
-        require_once __DIR__ . '/AccessorGeneratorCommand.php';
+        try {
+            require_once __DIR__ . '/AccessorGeneratorCommand.php';
 
-        return (new AccessorGeneratorCommand())->run(array_slice($argv, 2));
+            return (new AccessorGeneratorCommand())->run(array_slice($argv, 2));
+        }
+        catch (\Throwable $e) {
+            fwrite(STDERR, 'Error: ' . $e->getMessage() . PHP_EOL);
+
+            return 1;
+        }
     }
 
     /**
@@ -47,6 +54,7 @@ Usage:
 
 Options:
   --bootstrap=<file>       PHP file that returns a Frootbox\Db\Db instance or an array with key "db".
+  --localconfig=<file>     Project config array, defaults to ./localconfig.php when present.
   --db-host=<host>         MySQL host.
   --db-schema=<schema>     MySQL schema/database name.
   --db-user=<user>         MySQL user.

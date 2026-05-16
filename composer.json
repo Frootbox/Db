@@ -1,4 +1,5 @@
 {
+    "version": "1.7.0+1",
     "name": "frootbox/db",
     "description": "Frootbox Database Abstraction Layer",
     "support": {

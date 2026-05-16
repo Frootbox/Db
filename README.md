@@ -226,11 +226,32 @@ vendor/bin/frootbox-db
 Generate missing getter and setter methods for existing row classes:
 
 ```bash
-vendor/bin/frootbox-db generate-accessors src/Persistence --bootstrap=bootstrap/db.php
+vendor/bin/frootbox-db generate-accessors src/Persistence
 ```
 
-The bootstrap file must return a `Frootbox\Db\Db` instance, or an array with a
-`db` key:
+When the command is run from a project root containing `localconfig.php`, it
+automatically reads the database connection from:
+
+```php
+return [
+    'database' => [
+        'dbms' => 'mysql',
+        'host' => 'localhost',
+        'user' => 'root',
+        'password' => 'root',
+        'schema' => 'app',
+    ],
+];
+```
+
+Use a custom config path when needed:
+
+```bash
+vendor/bin/frootbox-db generate-accessors src/Persistence --localconfig=config/localconfig.php
+```
+
+Alternatively, a bootstrap file can return a `Frootbox\Db\Db` instance, or an
+array with a `db` key:
 
 ```php
 <?php
@@ -251,7 +272,7 @@ vendor/bin/frootbox-db generate-accessors src/Persistence \
 Preview changes without writing files:
 
 ```bash
-vendor/bin/frootbox-db generate-accessors src/Persistence --bootstrap=bootstrap/db.php --dry-run
+vendor/bin/frootbox-db generate-accessors src/Persistence --dry-run
 ```
 
 The generator scans concrete classes extending `Frootbox\Db\Row`, reads their
