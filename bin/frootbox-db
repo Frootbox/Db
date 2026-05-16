@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+
+$autoloaders = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+];
+
+foreach ($autoloaders as $autoloader) {
+    if (is_file($autoloader)) {
+        require $autoloader;
+        break;
+    }
+}
+
+spl_autoload_register(static function (string $class): void {
+    $prefix = 'Frootbox\\Db\\';
+
+    if (!str_starts_with($class, $prefix)) {
+        return;
+    }
+
+    $file = __DIR__ . '/../src/' . str_replace('\\', '/', substr($class, strlen($prefix))) . '.php';
+
+    if (is_file($file)) {
+        require $file;
+    }
+});
+
+if (!class_exists(\Frootbox\Db\Cli\Application::class)) {
+    require __DIR__ . '/../src/Cli/Application.php';
+}
+
+exit((new \Frootbox\Db\Cli\Application())->run($argv));

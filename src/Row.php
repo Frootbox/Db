@@ -14,6 +14,8 @@ class Row implements RowInterface
     protected $onInsertDefault = null;
     protected $changed = [ ];
     protected string $primaryKey = 'id';
+    protected static bool $logDeprecatedMagicCalls = true;
+    protected static array $loggedDeprecatedMagicCallSites = [];
 
     /**
      * @param array|null $record
@@ -40,53 +42,34 @@ class Row implements RowInterface
     {
         // Generic getter
         if (str_starts_with($method, 'get')) {
-            
             $attribute = lcfirst(substr($method, 3));
-                        
-            if (is_array($this->data) and array_key_exists($attribute, $this->data)) {
-                return $this->data[$attribute];                
-            }
-            
-            return null;
+
+            $this->logDeprecatedMagicCall($method);
+
+            return $this->getAttribute($attribute);
         }
 
         // Generic setter
         if (str_starts_with($method, 'set') and array_key_exists(0, $params)) {
-
             $attribute = lcfirst(substr($method, 3));
 
-            if (!is_array($this->data)) {
-                $this->data = [];
-            }
-            
-            if (!array_key_exists($attribute, $this->data) or $this->data[$attribute] != $params[0] or (is_string($params[0]) and strlen($params[0]) != !empty($this->data[$attribute]) ? strlen($this->data[$attribute]) : 0)) {
+            $this->logDeprecatedMagicCall($method);
 
-                // Convert value for boolean setter
-                if (str_starts_with($attribute, 'is')) {
-                    $params[0] = !empty($params[0]) ? 1 : 0;
-                }
-
-                // Convert value for boolean setter
-                if (str_starts_with($attribute, 'has')) {
-                    $params[0] = !empty($params[0]) ? 1 : 0;
-                }
-
-                // Set value
-                $this->data[$attribute] = $params[0];
-                $this->changed[$attribute] = true;
-            }
-
-            return $this;
+            return $this->setAttribute($attribute, $params[0]);
         }
 
         // Generic boolean getter
-        if (str_starts_with($method, 'is') and array_key_exists($method, $this->data)) {
-            return !empty($this->data[$method]);
+        if (str_starts_with($method, 'is') and $this->hasAttribute($method)) {
+            $this->logDeprecatedMagicCall($method);
+
+            return !empty($this->getAttribute($method));
         }
 
         // Generic boolean getter
-        if (str_starts_with($method, 'has') and array_key_exists($method, $this->data)) {
-            return !empty($this->data[$method]);
+        if (str_starts_with($method, 'has') and $this->hasAttribute($method)) {
+            $this->logDeprecatedMagicCall($method);
+
+            return !empty($this->getAttribute($method));
         }
         
         throw new \Exception('Try to call undefined method "' . $method . '()" on class "' . get_called_class() . '"');
@@ -143,6 +126,24 @@ class Row implements RowInterface
     }
 
     /**
+     * Get raw attribute value from the row data.
+     *
+     * Explicit getters in concrete row classes should use this method instead
+     * of relying on __call().
+     *
+     * @param string $attribute
+     * @return mixed|null
+     */
+    public function getAttribute(string $attribute): mixed
+    {
+        if (is_array($this->data) and array_key_exists($attribute, $this->data)) {
+            return $this->data[$attribute];
+        }
+
+        return null;
+    }
+
+    /**
      * @return array
      */
     public function getData(): array
@@ -156,7 +157,7 @@ class Row implements RowInterface
      */
     public function getDataRaw ( $attribute )
     {
-        return $this->data[$attribute] ?? null;
+        return $this->getAttribute($attribute);
     }
 
     /**
@@ -213,12 +214,23 @@ class Row implements RowInterface
     }
 
     /**
+     * Check whether the row currently contains an attribute.
+     *
+     * @param string $attribute
+     * @return bool
+     */
+    public function hasAttribute(string $attribute): bool
+    {
+        return is_array($this->data) and array_key_exists($attribute, $this->data);
+    }
+
+    /**
      * @param $column
      * @return bool
      */
     public function hasColumn($column): bool
     {
-        return array_key_exists($column, $this->data);
+        return $this->hasAttribute($column);
     }
 
     /**
@@ -295,7 +307,7 @@ class Row implements RowInterface
      */
     public function setData(array $data): \Frootbox\Db\Row
     {
-        if (!empty($data['config'])) {
+        if (!empty($data['config']) && is_array($data['config'])) {
 
             $this->config = array_replace_recursive($this->config, $data['config']);
 
@@ -317,6 +329,53 @@ class Row implements RowInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Set raw attribute value and mark it as changed when needed.
+     *
+     * Explicit setters in concrete row classes should use this method instead
+     * of relying on __call().
+     *
+     * @param string $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function setAttribute(string $attribute, mixed $value): static
+    {
+        if (!is_array($this->data)) {
+            $this->data = [];
+        }
+
+        if (!$this->hasAttributeChanged($attribute, $value)) {
+            return $this;
+        }
+
+        // Convert value for boolean setter
+        if (str_starts_with($attribute, 'is')) {
+            $value = !empty($value) ? 1 : 0;
+        }
+
+        // Convert value for boolean setter
+        if (str_starts_with($attribute, 'has')) {
+            $value = !empty($value) ? 1 : 0;
+        }
+
+        $this->data[$attribute] = $value;
+        $this->changed[$attribute] = true;
+
+        return $this;
+    }
+
+    /**
+     * Enable or disable logging for deprecated generic getter/setter calls.
+     *
+     * @param bool $shouldLog
+     * @return void
+     */
+    public static function setDeprecatedMagicCallLogging(bool $shouldLog): void
+    {
+        self::$logDeprecatedMagicCalls = $shouldLog;
     }
 
     /**
@@ -398,5 +457,54 @@ class Row implements RowInterface
         $row->setData($data);
 
         return $row;
+    }
+
+    /**
+     * @param string $attribute
+     * @param mixed $value
+     * @return bool
+     */
+    protected function hasAttributeChanged(string $attribute, mixed $value): bool
+    {
+        if (!$this->hasAttribute($attribute)) {
+            return true;
+        }
+
+        if ($this->data[$attribute] != $value) {
+            return true;
+        }
+
+        return is_string($value)
+            and is_string($this->data[$attribute])
+            and strlen($value) != strlen($this->data[$attribute]);
+    }
+
+    /**
+     * @param string $method
+     * @return void
+     */
+    protected function logDeprecatedMagicCall(string $method): void
+    {
+        if (!self::$logDeprecatedMagicCalls) {
+            return;
+        }
+
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+        $caller = $trace[2] ?? [];
+        $file = $caller['file'] ?? 'unknown file';
+        $line = $caller['line'] ?? 'unknown line';
+        $key = get_called_class() . '::' . $method . '@' . $file . ':' . $line;
+
+        if (isset(self::$loggedDeprecatedMagicCallSites[$key])) {
+            return;
+        }
+
+        self::$loggedDeprecatedMagicCallSites[$key] = true;
+
+        error_log(
+            'Deprecated Frootbox\\Db\\Row magic call: ' . get_called_class() . '::' . $method . '() '
+            . 'was handled by __call(). Add an explicit getter/setter method. '
+            . 'Called at ' . $file . ':' . $line . '.'
+        );
     }
 }

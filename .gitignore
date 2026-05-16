@@ -1,2 +1,9 @@
 .project
 .idea
+.DS_Store
+/.phpunit.cache
+/build
+/coverage
+/dist
+/vendor
+composer.lock
