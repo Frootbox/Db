@@ -577,13 +577,11 @@ class Row implements RowInterface
             return true;
         }
 
-        if ($this->data[$attribute] != $value) {
+        if ($this->data[$attribute] !== $value) {
             return true;
         }
 
-        return is_string($value)
-            and is_string($this->data[$attribute])
-            and strlen($value) != strlen($this->data[$attribute]);
+        return false;
     }
 
     /**
