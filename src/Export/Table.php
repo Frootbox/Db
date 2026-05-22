@@ -21,7 +21,7 @@ class Table implements \JsonSerializable {
      * @param string $name Table name.
      * @param array|null $data Optional table metadata.
      */
-    public function __construct( \Frootbox\Db\Db $db, string $name, array $data = null )
+    public function __construct( \Frootbox\Db\Db $db, string $name, ?array $data = null )
     {
         $this->name = $name;
 

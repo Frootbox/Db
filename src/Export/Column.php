@@ -15,7 +15,7 @@ class Column implements \JsonSerializable {
      *
      * @param array|null $data Optional INFORMATION_SCHEMA column metadata.
      */
-    public function __construct ( array $data = null )
+    public function __construct ( ?array $data = null )
     {
 
         if ($data !== null) {

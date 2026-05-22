@@ -35,7 +35,7 @@ abstract class NestedSet extends \Frootbox\Db\Model
      * @param array|null $params Optional tree parameters.
      * @return \Frootbox\Db\Result
      */
-    public function getTree($rootId, array $params = null): \Frootbox\Db\Result
+    public function getTree($rootId, ?array $params = null): \Frootbox\Db\Result
     {
         $where = ' AND p.rootId = ' . $rootId . ' AND n.rootId = ' . $rootId;
 

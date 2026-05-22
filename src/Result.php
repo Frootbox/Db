@@ -51,7 +51,7 @@ class Result implements \Iterator, \JsonSerializable, \Countable
     public function __construct(
         array $result,
         \Frootbox\Db\Db $db,
-        array $options = null
+        ?array $options = null
     )
     {
         $this->db = $db;

@@ -79,10 +79,10 @@ class Model
      * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function fetch(
-        array $params = null,
-        array $where = null,
-        array $order = null,
-        int $limit = null,
+        ?array $params = null,
+        ?array $where = null,
+        ?array $order = null,
+        ?int $limit = null,
         bool $calcFoundRows = false,
     ): Result
     {
@@ -144,10 +144,10 @@ class Model
      * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function fetchOne(
-        array $params = null,
-        array $options = null,
-        array $where = null,
-        array $order = null,
+        ?array $params = null,
+        ?array $options = null,
+        ?array $where = null,
+        ?array $order = null,
     ): ?Row
     {
         $params['limit'] = 1;
@@ -207,7 +207,7 @@ class Model
      * @param array|null $params Placeholder values keyed by placeholder name.
      * @return \Frootbox\Db\Result
      */
-    public function fetchByQuery($sql, array $params = null): \Frootbox\Db\Result
+    public function fetchByQuery($sql, ?array $params = null): \Frootbox\Db\Result
     {
         // Prepare sql statement
         $stmt = $this->db->prepare($sql);

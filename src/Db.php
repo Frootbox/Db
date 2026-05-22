@@ -58,7 +58,7 @@ class Db
      * @param array|null $params Placeholder values keyed by placeholder name.
      * @return mixed First column value, or false when the result set is empty.
      */
-    public function fetchColumn(string $sql, array $params = null): mixed
+    public function fetchColumn(string $sql, ?array $params = null): mixed
     {
         $stmt = $this->prepare($sql);
 
@@ -244,7 +244,7 @@ class Db
      * @param array|null $options Optional initialization options.
      * @return void
      */
-    public static function init($wrapper, array $options = null)
+    public static function init($wrapper, ?array $options = null)
     {
         
     }

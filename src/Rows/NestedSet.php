@@ -111,7 +111,7 @@ class NestedSet extends \Frootbox\Db\Row
      * @param array|null $params Optional fetch parameters, including where.
      * @return \Frootbox\Db\Result
      */
-    public function getChildren(array $params = null)
+    public function getChildren(?array $params = null)
     {
         $where = $params['where'] ?? [];
         $where['parentId'] = $this->getId();
@@ -156,7 +156,7 @@ class NestedSet extends \Frootbox\Db\Row
      * @param array|null $params Optional fetch parameters.
      * @return \Frootbox\Db\Result
      */
-    public function getOffspring(array $params = null)
+    public function getOffspring(?array $params = null)
     {
         if (empty($params['order'])) {
             $params['order'] = [ 'lft ASC' ];

@@ -23,7 +23,7 @@ class Row implements RowInterface
      * @param array|null $record Raw column values.
      * @param Db|null $db Database wrapper used for persistence operations.
      */
-    public function __construct(array $record = null, Db $db = null)
+    public function __construct(?array $record = null, ?Db $db = null)
     {
         if ($record !== null) {
             $this->data = $record;
@@ -45,7 +45,7 @@ class Row implements RowInterface
      * @return $this|bool|mixed|null
      * @throws \Exception
      */
-    public function __call($method, array $params = null)
+    public function __call($method, ?array $params = null)
     {
         // Generic getter
         if (str_starts_with($method, 'get')) {
