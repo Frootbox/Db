@@ -19,6 +19,9 @@
     "bin": [
         "bin/frootbox-db"
     ],
+    "scripts": {
+        "test": "@php tests/transactions.php"
+    },
     "autoload": {
     	"psr-4": { "Frootbox\\Db\\": "src/" } 
     }

@@ -171,13 +171,17 @@ class Db
     }
 
     /**
-     * Roll back the active transaction on the adapter.
+     * Roll back the entire transaction, including all nested levels.
      *
      * @return void
      */
     public function rollback(): void
     {
-        $this->dbms->rollback();
+        try {
+            $this->dbms->rollback();
+        } finally {
+            $this->transactionLevel = 0;
+        }
     }
 
     /**
@@ -217,11 +221,16 @@ class Db
      */
     public function transactionCommit(): \Frootbox\Db\Db
     {
-        --$this->transactionLevel;
+        if ($this->transactionLevel === 0) {
+            throw new \LogicException('No transaction to commit.');
+        }
 
-        if ($this->transactionLevel == 0) {
+        // Keep the level intact if the adapter fails, so callers can roll back.
+        if ($this->transactionLevel === 1) {
             $this->dbms->transactionCommit();
         }
+
+        --$this->transactionLevel;
 
         return $this;
     }

@@ -161,13 +161,15 @@ class Mysql implements Interfaces\Dbms
     }
 
     /**
-     * Roll back the active PDO transaction.
+     * Roll back the active PDO transaction; repeated rollback is a no-op.
      *
      * @return void
      */
     public function rollback(): void
     {
-        $this->pdo->rollBack();
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
     }
 
     /**

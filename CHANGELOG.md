@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Reset transaction nesting after rollback and make MySQL rollback safe when no
+  PDO transaction is active, preserving errors through nested catch handlers.
+- Reject commits without an active transaction and preserve nesting when the
+  outer commit fails, allowing rollback and a clean subsequent transaction.
+
+### Added
+
+- Isolated PDO transaction regression tests, runnable with `composer test`.
+
 ## [1.1] - 2023-10-02
 
 ### Added

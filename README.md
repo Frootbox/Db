@@ -292,7 +292,25 @@ $page->save();
 $db->transactionCommit();
 ```
 
-Call `rollback()` if a transaction should be reverted.
+Call `rollback()` if a transaction should be reverted. Nested starts share one
+physical transaction: only the outermost commit commits it, and a rollback at any
+level aborts the whole transaction and resets the nesting counter. These helpers
+do not create savepoints.
+
+With the bundled MySQL adapter, repeated rollback (including an outer catch after
+an inner rollback) is safe and leaves the original application exception intact.
+A new transaction can be started after rollback. Committing without a matching
+active transaction throws `LogicException`; a failed outer commit preserves the
+counter so the caller can still roll back. A rollback failure is propagated, but
+the nesting counter is reset; do not continue using a connection whose rollback
+failed without checking or replacing it.
+
+### Transaction Regression Tests
+
+Run `composer test` (or `php tests/transactions.php`). The tests require
+`ext-pdo_sqlite` and exercise the actual MySQL adapter's PDO transaction methods
+against an isolated in-memory database. No MySQL server or application data is
+needed.
 
 ## Error Handling
 
